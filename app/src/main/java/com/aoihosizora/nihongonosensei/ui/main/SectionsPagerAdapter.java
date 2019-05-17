@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.aoihosizora.nihongonosensei.R;
+import com.aoihosizora.nihongonosensei.ui.frag.HomeFragment;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
@@ -16,7 +17,7 @@ import com.aoihosizora.nihongonosensei.R;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2};
+    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3, R.string.tab_text_4};
     private final Context mContext;
 
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
@@ -28,6 +29,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
+        if (position == 0)
+            return new HomeFragment();
         return PlaceholderFragment.newInstance(position + 1);
     }
 
@@ -40,6 +43,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         // Show 2 total pages.
-        return 2;
+        return 4;
     }
 }
