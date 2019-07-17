@@ -4,10 +4,12 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/id_HomeFragment_TestTextView"
+        android:id="@+id/id_HomeFragment_DynamicTextView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical|center_horizontal"
-        android:textSize="30sp"
-        android:text="BILIBILI"/>
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/Fragment_MarginLeftRight"
+        android:layout_marginRight="@dimen/Fragment_MarginLeftRight"
+        android:layout_marginTop="@dimen/Fragment_MarginTop"
+        android:textSize="@dimen/TipsTextView_TextSize"
+        android:text="@string/str_HomeFragment_DynamicTextView"/>
 </LinearLayout>

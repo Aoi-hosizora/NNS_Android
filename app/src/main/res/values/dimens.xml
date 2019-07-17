@@ -5,4 +5,13 @@
     <dimen name="appbar_padding">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
+
+    <!-- Controller Size -->
+    <dimen name="TitleTextView_TextSize">22sp</dimen>
+    <dimen name="TipsTextView_TextSize">14sp</dimen>
+
+    <!-- Controller Margin -->
+    <dimen name="Fragment_MarginLeftRight">10dp</dimen>
+    <dimen name="Fragment_MarginTop">6dp</dimen>
+
 </resources>

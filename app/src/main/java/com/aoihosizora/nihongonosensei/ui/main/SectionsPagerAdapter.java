@@ -8,16 +8,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.aoihosizora.nihongonosensei.R;
+import com.aoihosizora.nihongonosensei.ui.frag.CategoryFragment;
+import com.aoihosizora.nihongonosensei.ui.frag.ColoumFragment;
+import com.aoihosizora.nihongonosensei.ui.frag.GrammarFragment;
 import com.aoihosizora.nihongonosensei.ui.frag.HomeFragment;
 
-/**
- * A [FragmentPagerAdapter] that returns a fragment corresponding to
- * one of the sections/tabs/pages.
- */
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3, R.string.tab_text_4};
+    private static final int[] TAB_TITLES = new int[]{R.string.str_HomeFragment_TabTitle,
+            R.string.str_GrammarFragment_TabTitle,
+            R.string.str_ColumnFragment_TabTitle,
+            R.string.str_CategoryFragment_TabTitle};
+
     private final Context mContext;
 
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
@@ -27,11 +30,17 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        // getItem is called to instantiate the fragment for the given page.
-        // Return a PlaceholderFragment (defined as a static inner class below).
-        if (position == 0)
-            return new HomeFragment();
-        return PlaceholderFragment.newInstance(position + 1);
+        switch (position) {
+            case 0:
+                return new HomeFragment();
+            case 1:
+                return new GrammarFragment();
+            case 2:
+                return new ColoumFragment();
+            case 3:
+                return new CategoryFragment();
+        }
+        return new Fragment();
     }
 
     @Nullable
