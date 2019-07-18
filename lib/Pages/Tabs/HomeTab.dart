@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../Constants/Strings.dart';
-import '../../Constants/Styles.dart';
+import '../../Utils/NetUtil.dart';
+import '../../Utils/CommonUtil.dart';
 
 class HomeTab extends StatefulWidget {
     HomeTab({Key key}) : super(key: key);
@@ -11,8 +11,13 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
+  
     @override
     Widget build(BuildContext context) {
-        return Text(Strings.HomeTab, style: Styles.GrayTextStyle);
+        return Column(children: <Widget>[
+            OutlineButton(
+                onPressed: () => NetUtils.getNNSData().then((resp) => CommonUtil.showToast(resp)),
+            )
+        ],);
     }
 }

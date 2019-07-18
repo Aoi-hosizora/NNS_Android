@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:nihongo_no_sensei/Utils/CommonUtil.dart';
+import 'package:nihongo_no_sensei/Utils/NetUtil.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../Constants/Strings.dart';
 import '../Constants/Dimens.dart';
@@ -43,6 +46,15 @@ class _HomePageState extends State<HomePage> {
             child: Text(Strings.Error)
         );
     }
+
+    /// Use Browser to open hp
+    void _openBrowser() async {
+        if (await canLaunch(NetUtils.NNS_URL))
+            // launch(NetUtils.NNS_URL, forceWebView: true); <- Widget Poi
+            launch(NetUtils.NNS_URL);
+        else
+           CommonUtil.showToast(Strings.OpenUrlErrorToast);
+    }
     
     @override
     Widget build(BuildContext context) {
@@ -51,6 +63,13 @@ class _HomePageState extends State<HomePage> {
             child: Scaffold(
                 appBar: AppBar(
                     title: Text(Strings.HomePageTitle, style: Styles.NormalTextStyle),
+                    actions: <Widget>[
+                        IconButton(
+                            tooltip: Strings.OpenUrlToolBar,
+                            icon: Icon(Icons.web),
+                            onPressed: () => _openBrowser(),
+                        )
+                    ],
                     bottom: TabBar(
                         isScrollable: true,
                         tabs: _tabs.map((String tab) => Tab(text: tab)).toList(),

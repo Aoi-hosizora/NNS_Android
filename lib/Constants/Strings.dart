@@ -3,6 +3,8 @@ class Strings {
 
     static const String AppTitle = "Flutter Demo";
     static const String HomePageTitle = "日本語の先生";
+    static const String OpenUrlToolBar = "ホームページを開く";
+    static const String OpenUrlErrorToast = "ホームページが開けませんでした";
 
     static const String HomeTab = "ホーム";
     static const String GammarTab = "文法講座";
