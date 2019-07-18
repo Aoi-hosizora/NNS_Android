@@ -29,6 +29,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.14.11"
+  csslib:
+    dependency: transitive
+    description:
+      name: csslib
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.16.1"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -58,6 +65,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.2.11"
+  html:
+    dependency: "direct main"
+    description:
+      name: html
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.14.0+2"
   http:
     dependency: "direct main"
     description:

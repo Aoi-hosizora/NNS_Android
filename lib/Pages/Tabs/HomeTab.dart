@@ -16,7 +16,8 @@ class _HomeTabState extends State<HomeTab> {
     Widget build(BuildContext context) {
         return Column(children: <Widget>[
             OutlineButton(
-                onPressed: () => NetUtils.getNNSData().then((resp) => CommonUtil.showToast(resp)),
+                onPressed: () => NetUtils.getTmpData().then((resp) => CommonUtil.showToast(resp)),
+                child: Text("Bili"),
             )
         ],);
     }

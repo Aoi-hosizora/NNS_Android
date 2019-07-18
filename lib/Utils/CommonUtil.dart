@@ -22,23 +22,18 @@ class CommonUtil {
     /// Channel comm with Naive
     static const _channel = const MethodChannel("android_log");
 
-    static void e(String tag, String message) =>
-        _channel.invokeMethod('logE', {'tag': tag, 'message': message});
+    static void loge(String tag, dynamic message) =>
+        _channel.invokeMethod('logE', {'tag': tag, 'message': message.toString()});
     
-    static void v(String tag, String message) =>
-        _channel.invokeMethod('logV', {'tag': tag, 'message': message});
+    static void logv(String tag, dynamic message) =>
+        _channel.invokeMethod('logV', {'tag': tag, 'message': message.toString()});
     
-
-    static void d(String tag, String message) =>
-        _channel.invokeMethod('logD', {'tag': tag, 'message': message});
+    static void logd(String tag, dynamic message) =>
+        _channel.invokeMethod('logD', {'tag': tag, 'message': message.toString()});
     
-
-    static void i(String tag, String message) =>
-        _channel.invokeMethod('logI', {'tag': tag, 'message': message});
+    static void logi(String tag, dynamic message) =>
+        _channel.invokeMethod('logI', {'tag': tag, 'message': message.toString()});
     
-
-    static void w(String tag, String message) =>
-        _channel.invokeMethod('logW', {'tag': tag, 'message': message});
-    
-
+    static void logw(String tag, dynamic message) =>
+        _channel.invokeMethod('logW', {'tag': tag, 'message': message.toString()});
 }

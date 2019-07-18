@@ -18,10 +18,11 @@ adb connect 127.0.0.1:xxxxx # Connect adb server
 flutter run # Run App through adb
 ```
 
-### Dependencies
+### [Dependencies](https://github.com/Aoi-hosizora/NNS_Android/blob/master/pubspec.yaml)
 ```yaml
 cupertino_icons: ^0.1.2
 fluttertoast: ^2.1.1
 url_launcher: ^5.0.2
 http: ^0.12.0+2
+html: ^0.14.0+2
 ```
