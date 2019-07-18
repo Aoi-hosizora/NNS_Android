@@ -1,7 +1,22 @@
 # NNS_Android
++ Developed by [Flutter](https://flutter.dev/) framework
 
-### 依赖外部库
-+ [OKHttp 3.14.1](https://github.com/square/okhttp)
-+ [JSoup 1.11.3](https://github.com/jhy/jsoup)
+### Environment
++ `Flutter 1.5.4-hotfix.2`
++ `Dart 2.3.0`
++ `VS Code`
++ (`AS 3.3.x`)
 
-+ [Others](https://github.com/Aoi-hosizora/NNS_Android/blob/master/app/build.gradle)
+### Build & Run
+```bash
+flutter packages get # Get dependencies from pubspec
+
+adb connect 127.0.0.1:xxxxx # Connect adb server
+flutter run # Run App through adb
+```
+
+### Dependencies
+```yaml
+cupertino_icons: ^0.1.2
+fluttertoast: ^2.1.1
+```
