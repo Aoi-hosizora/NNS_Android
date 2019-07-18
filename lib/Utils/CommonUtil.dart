@@ -7,8 +7,8 @@ class CommonUtil {
 
     /// 显示底部 Toast
     /// 
-    /// @param `msg` any
-    static void showToast(msg) {
+    /// @param `msg` dynamic
+    static void showToast(dynamic msg) {
         Fluttertoast.showToast(
             msg: msg.toString(),
             toastLength: Toast.LENGTH_SHORT,
