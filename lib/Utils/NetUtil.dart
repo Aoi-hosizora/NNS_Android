@@ -6,6 +6,7 @@ import 'package:sprintf/sprintf.dart';
 import './CommonUtil.dart';
 import '../Models/Lists/KiziListItem.dart';
 import '../Models/Lists/GrammarListItem.dart';
+import '../Models/Entities/Kizi.dart';
 
 class NetUtils {
     NetUtils._();
@@ -137,9 +138,13 @@ class NetUtils {
     }
 
     /// get 日本語教師のお仕事 中国での生活 記事 htmlDoc
-    static Future<String> getKiziContent(String url) async {
-        String httpDoc = await _getResponse(url);
+    /// 
+    /// @param `item` KiziListItem
+    static Future<Kizi> getKiziContent(KiziListItem item) async {
+        String httpDoc = await _getResponse(item.url);
         Document document = parse(httpDoc);
-        return _parseImgHtml(document.querySelector("#mainEntity .clearfix").text);
+        String title = document.querySelector("#mainEntity .entry-title").text;
+        String content = _parseImgHtml(document.querySelector("#mainEntity .clearfix").text);
+        return Kizi(title: title, content: content, url: item.url, date: item.date);
     }
 }

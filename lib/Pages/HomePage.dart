@@ -7,9 +7,9 @@ import '../Constants/Strings.dart';
 import '../Constants/Dimens.dart';
 import '../Constants/Styles.dart';
 
-import './Tabs/HomeTab.dart';
-import './Tabs/GammarTab.dart';
-import './Tabs/ColumnTab.dart';
+import './Tabs/SeikatuTab.dart';
+import './Tabs/GrammarTab.dart';
+import './Tabs/ShikotoTab.dart';
 import './Tabs/CategoryTab.dart';
 
 class HomePage extends StatefulWidget {
@@ -25,22 +25,33 @@ class _HomePageState extends State<HomePage> {
 
     /// Tab Strings(From Strings)
     List<String> _tabs = <String>[
-        Strings.HomeTab, Strings.GammarTab, Strings.ColumnTab, Strings.CategoryTab
+        Strings.SeikatuTab, Strings.ShikotoTab, Strings.GrammarTab, Strings.CategoryTab
     ];
 
+    Widget _seikatuTab, _shikototab, _grammarTab, _categoryTab;
+
+    @override
+    void initState() {
+        super.initState();
+        _seikatuTab = SeikatuTab();
+        _shikototab = ShikotoTab();
+        _grammarTab = GrammarTab();
+        _categoryTab = CategoryTab();
+    }
+    
     /// Get Tab Content Widget
     /// 
     /// @param `tab` Tab title
     Widget _getTab(String tab) {
         switch (tab) {
-            case Strings.HomeTab:
-                return HomeTab();
-            case Strings.GammarTab:
-                return GammarTab();
-            case Strings.ColumnTab:
-                return ColumnTab();
+            case Strings.SeikatuTab:
+                return _seikatuTab;
+            case Strings.ShikotoTab:
+                return _shikototab;
+            case Strings.GrammarTab:
+                return _grammarTab;
             case Strings.CategoryTab:
-                return CategoryTab();
+                return _categoryTab;
         }
         return Center(
             child: Text(Strings.Error)
@@ -76,16 +87,20 @@ class _HomePageState extends State<HomePage> {
                         labelStyle: Styles.NormalTextStyle
                     )
                 ),
-                body: TabBarView(children: _tabs.map((String tab) {
-                    return Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: Dimens.TabPaddingV,
-                            vertical: Dimens.TabPaddingH
-                        ),
-                        child: _getTab(tab)
-                    );
-                }).toList())
+                body: TabBarView(
+                    children: _tabs.map((String tab) {
+                        return Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: Dimens.TabPaddingV,
+                                vertical: Dimens.TabPaddingH
+                            ),
+                            child: _getTab(tab)
+                        );
+                    }).toList()
+                )
             )
         );
     }
 }
+
+// https://www.jianshu.com/p/7f5b7e7d3c9a

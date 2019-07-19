@@ -6,12 +6,14 @@ class Strings {
     static const String OpenUrlToolBar = "ホームページを開く";
     static const String OpenUrlErrorToast = "ホームページが開けませんでした";
 
-    static const String HomeTab = "ホーム";
-    static const String GammarTab = "文法講座";
-    static const String ColumnTab = "コラム";
+    static const String SeikatuTab = "中国での生活";
+    static const String GrammarTab = "文法講座";
+    static const String ShikotoTab = "日本語教師のお仕事";
     static const String CategoryTab = "カテゴリー";
 
     static const String Error = "エラー";
+    static const String More = "読み込み...";
+    static const String KiziUpdateToast = "%s件の記事を更新しました";
 
     static const String GrammarClassN1 = "Ｎ１文法";
     static const String GrammarClassN1W = "Ｎ１　似ている文法の比較";
