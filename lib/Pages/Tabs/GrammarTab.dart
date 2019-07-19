@@ -1,11 +1,12 @@
+import 'dart:collection';
 import 'package:flutter/material.dart';
 
-import '../../Constants/Strings.dart';
-import '../../Constants/Styles.dart';
 import '../../Constants/Consts.dart';
+import '../../Models/OnlineListDataMgr.dart';
 import '../../Models/Lists/GrammarListItem.dart';
-import '../../Utils/CommonUtil.dart';
 import '../../Utils/NetUtil.dart';
+import '../../Utils/CommonUtil.dart';
+import '../../Utils/WidgetUtil.dart';
 
 class GrammarTab extends StatefulWidget {
     GrammarTab({Key key}) : super(key: key);
@@ -16,52 +17,42 @@ class GrammarTab extends StatefulWidget {
 
 class _GrammarTabState extends State<GrammarTab> with AutomaticKeepAliveClientMixin {
 
-    var _grammarList = <List<GrammarListItem>>[];
-    var _more = <Card>[];
+    var _moreList = HashMap<String, Card>();
+    var _cardList = HashMap<String, List<Card>>();
+    OnlineListDataMgr _repo;
 
     @override
     void initState() {
         super.initState();
+        CommonUtil.loge("_GrammarTabState", "initState");
 
+        _repo = OnlineListDataMgr.getInstance();
         GrammarListItem.GrammarClass.forEach((gc) {
-             _more.add(Card(
-                child: ListTile(
-                    title: Center(child: Text(Strings.More, style: Styles.TitleTextStyle)),
-                    onTap: () => CommonUtil.showToast(gc),
-                )
-            ));
+             _moreList[gc] = WidgetUtil.getMore(() => CommonUtil.showToast(gc));
         });
-       
-        _getDataList(); 
+        _getData(); 
     }
 
-    /// get Grammar List
-    void _getDataList() async {
-        var retGrammarList = <List<GrammarListItem>>[];
-
-        GrammarListItem.GrammarClass.forEach((gc) async {
-            retGrammarList.add(await NetUtils.getGrammarPageData(gc));
-            setState(() => _grammarList = retGrammarList );
-        });
+    @override
+    void dispose() {
+        CommonUtil.loge("_GrammarTabState", "dispose");
+        super.dispose();
     }
 
-    /// parse to ListView
-    /// 
-    /// @param `items` List<GrammarListItem>
-    ListView _getCardList(List<GrammarListItem> items) {
-        var cards = <Widget>[];
-        for (var item in items.sublist(1)) {
-            cards.add(
-                Card(
-                    child: ListTile(
-                        title: Text(item.title, style: Styles.TitleTextStyle)
-                    )
-                )
-            );
+    void _getData() async {
+        // Data need update
+        if (_repo.grammarLists.length != GrammarListItem.GrammarClass.length) {
+            _cardList = HashMap<String, List<Card>>();
+            for (String gc in GrammarListItem.GrammarClass) {
+                _repo.grammarLists[gc] = await NetUtils.getGrammarPageData(gc);
+                CommonUtil.loge("_getData", _repo.grammarLists[gc].length);
+                _cardList[gc] = <Card>[];
+                for (var g in _repo.grammarLists[gc].sublist(Consts.GrammarListMinCnt)) {
+                    _cardList[gc].add(WidgetUtil.getCardFromGrammarListItem(g, () => CommonUtil.showToast(g.url)));
+                }
+                setState(() {});  
+            }
         }
-        return ListView(
-            children: cards
-        );
     }
 
     @override
@@ -76,7 +67,9 @@ class _GrammarTabState extends State<GrammarTab> with AutomaticKeepAliveClientMi
             padding: EdgeInsets.all(10.0),
             crossAxisCount: 2,
             childAspectRatio: 1.0,
-            children: _grammarList.map((g) => _getCardList(g)).toList()
+            children: GrammarListItem.GrammarClass.map((gm) => 
+                WidgetUtil.getCompleteGrammarListViewFromHashMap(_cardList, _moreList, gm)
+            ).toList()
         );
     }
 }

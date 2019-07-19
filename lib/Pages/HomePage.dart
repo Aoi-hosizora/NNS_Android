@@ -21,22 +21,39 @@ class HomePage extends StatefulWidget {
 	@override
 	State<HomePage> createState() => new _HomePageState();
 }
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
 
     /// Tab Strings(From Strings)
     List<String> _tabs = <String>[
         Strings.SeikatuTab, Strings.ShikotoTab, Strings.GrammarTab, Strings.CategoryTab
     ];
 
+    TabController _tabController;
+
     Widget _seikatuTab, _shikototab, _grammarTab, _categoryTab;
 
     @override
     void initState() {
         super.initState();
+        
         _seikatuTab = SeikatuTab();
         _shikototab = ShikotoTab();
         _grammarTab = GrammarTab();
         _categoryTab = CategoryTab();
+
+        _tabController = TabController(
+            length: _tabs.length, 
+            vsync: this
+        )..addListener(() {
+            if (_tabController.indexIsChanging)
+                _tabController.animateTo(_tabController.index);
+        });
+    }
+
+    @override
+    void dispose() {
+        super.dispose();
+        _tabController.dispose();
     }
     
     /// Get Tab Content Widget
@@ -69,35 +86,34 @@ class _HomePageState extends State<HomePage> {
     
     @override
     Widget build(BuildContext context) {
-        return DefaultTabController(
-            length: _tabs.length,
-            child: Scaffold(
-                appBar: AppBar(
-                    title: Text(Strings.HomePageTitle, style: Styles.NormalTextStyle),
-                    actions: <Widget>[
-                        IconButton(
-                            tooltip: Strings.OpenUrlToolBar,
-                            icon: Icon(Icons.web),
-                            onPressed: () => _openBrowser(),
-                        )
-                    ],
-                    bottom: TabBar(
-                        isScrollable: true,
-                        tabs: _tabs.map((String tab) => Tab(text: tab)).toList(),
-                        labelStyle: Styles.NormalTextStyle
+        return Scaffold(
+            appBar: AppBar(
+                title: Text(Strings.HomePageTitle, style: Styles.NormalTextStyle),
+                actions: <Widget>[
+                    IconButton(
+                        tooltip: Strings.OpenUrlToolBar,
+                        icon: Icon(Icons.web),
+                        onPressed: () => _openBrowser(),
                     )
-                ),
-                body: TabBarView(
-                    children: _tabs.map((String tab) {
-                        return Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: Dimens.TabPaddingV,
-                                vertical: Dimens.TabPaddingH
-                            ),
-                            child: _getTab(tab)
-                        );
-                    }).toList()
+                ],
+                bottom: TabBar(
+                    controller: _tabController,
+                    isScrollable: true,
+                    tabs: _tabs.map((String tab) => Tab(text: tab)).toList(),
+                    labelStyle: Styles.NormalTextStyle
                 )
+            ),
+            body: TabBarView(
+                controller: _tabController,
+                children: _tabs.map((String tab) {
+                    return Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: Dimens.TabPaddingV,
+                            vertical: Dimens.TabPaddingH
+                        ),
+                        child: _getTab(tab)
+                    );
+                }).toList()
             )
         );
     }

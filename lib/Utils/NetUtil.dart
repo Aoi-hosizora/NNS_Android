@@ -115,7 +115,7 @@ class NetUtils {
     /// @param `page` 1..n
     static Future<List<KiziListItem>> getSHIGOTOPageData({int page: 1}) async {
         List<KiziListItem> shigotos = await _getOnePageList(NNS_SHIGOTO_URL, page: page);
-        CommonUtil.loge("getSHIGOTOData", shigotos.length.toString() + shigotos.toString());
+        // CommonUtil.loge("getSHIGOTOData", shigotos.length.toString() + shigotos.toString());
         return shigotos;
     }
 
@@ -124,7 +124,7 @@ class NetUtils {
     /// @param `page` 1..n
     static Future<List<KiziListItem>> getSEIKATUPageData({int page: 1}) async {
         List<KiziListItem> setkatus = await _getOnePageList(NNS_SEIKATU_URL, page: page);
-        CommonUtil.loge("getSHIGOTOData", setkatus.length.toString() + setkatus.toString());
+        // CommonUtil.loge("getSHIGOTOData", setkatus.length.toString() + setkatus.toString());
         return setkatus;
     }
 
@@ -133,7 +133,7 @@ class NetUtils {
     /// @param `grammarClass` GrammarListItem.N1
     static Future<List<GrammarListItem>> getGrammarPageData(String grammarClass) async {
         List<GrammarListItem> grammars = await _getOneGrammarClassList(grammarClass);
-        CommonUtil.loge("getGrammarPageData", grammars.length.toString() + grammars.toString());
+        // CommonUtil.loge("getGrammarPageData", grammars.length.toString() + grammars.toString());
         return grammars;
     }
 

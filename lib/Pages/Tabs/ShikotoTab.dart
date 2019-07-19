@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:sprintf/sprintf.dart';
 
 import '../../Models/Lists/KiziListItem.dart';
-import '../../Constants/Styles.dart';
-import '../../Constants/Strings.dart';
+import '../../Models/OnlineListDataMgr.dart';
 import '../../Constants/Consts.dart';
 import '../../Utils/CommonUtil.dart';
 import '../../Utils/NetUtil.dart';
+import '../../Utils/WidgetUtil.dart';
 
 class ShikotoTab extends StatefulWidget {
     ShikotoTab({Key key}) : super(key: key);
@@ -17,67 +16,39 @@ class ShikotoTab extends StatefulWidget {
 
 class _ShikotoTabState extends State<ShikotoTab> with AutomaticKeepAliveClientMixin {
 
-    var _kiziList, _more;
-
-    int _currListCnt = 0;
+    Card _more;
+    List<Widget> _listView = <Widget>[];
+    OnlineListDataMgr _repo;
 
     @override
     void initState() {
         super.initState();
-        _kiziList = <Widget>[];
-        _more = Card(
-            child: ListTile(
-                title: Center(child: Text(Strings.More, style: Styles.TitleTextStyle)),
-                onTap: () => _refreshData()
-            ),
-        );
+        CommonUtil.loge("_ShikotoTabState", "initState");
+        
+        _repo = OnlineListDataMgr.getInstance();
+        _more = WidgetUtil.getMore(() => _refreshData());
         _refreshData();
     }
 
+    @override
+    void dispose() {
+        CommonUtil.loge("_ShikotoTabState", "dispose");
+        super.dispose();
+    }
+
     void _refreshData() async {
-        
-        var widgetList = new List<Widget>();
-        widgetList.addAll(_kiziList);
-
-        if (widgetList.contains(_more))
-            widgetList.remove(_more);
-
-        int motoCnt = widgetList.length, nowCnt;
-
         for (var i = 0; i < Consts.KiziPagesForOneRefresh; i++) {
-
-            List<KiziListItem> kizis = await NetUtils.getSHIGOTOPageData(page: ++_currListCnt);
-            CommonUtil.loge("_refreshData", "_currListCnt: " + _currListCnt.toString());
-
-            for (var item in kizis) 
-                widgetList.add(
-                    Card(
-                        child: ListTile(
-                            title: Text(
-                                item.title,
-                                style: Styles.TitleTextStyle, 
-                                maxLines: Consts.CardTitleMaxLine, overflow: TextOverflow.ellipsis
-                            ),
-                            subtitle: Text(
-                                item.arasuzi, 
-                                style: Styles.SubTitleTextStyle, 
-                                maxLines: Consts.CardSubTitleMaxLine, overflow: TextOverflow.ellipsis
-                            ),
-                            trailing: Text(
-                                    item.date, 
-                                    style: Styles.SubTitleTextStyle
-                            ),
-                            onTap: () => CommonUtil.showToast(item.url),
-                        )
-                    )
-                );      
+            List<KiziListItem> newkizis = await NetUtils.getSHIGOTOPageData(page: ++_repo.shikotoKiziCnt);
+            CommonUtil.loge("_refreshData", "_repo.shikotoKiziCnt: " + _repo.shikotoKiziCnt.toString());
+            _repo.shikotoKizis.addAll(newkizis);
         }
-        
-        nowCnt = widgetList.length;
-        widgetList.add(_more);
 
-        // CommonUtil.showToast(sprintf(Strings.KiziUpdateToast, [nowCnt - motoCnt]));
-        setState(() => _kiziList = widgetList );
+        _listView = <Widget>[];
+        for (var kizi in _repo.shikotoKizis) 
+            _listView.add(WidgetUtil.getCardFromKiziListItem(kizi, () => CommonUtil.showToast(kizi.url)));
+        _listView.add(_more);
+
+        setState(() {});
     }
     
     @override
@@ -87,7 +58,7 @@ class _ShikotoTabState extends State<ShikotoTab> with AutomaticKeepAliveClientMi
     Widget build(BuildContext context) {
         super.build(context);
         return ListView(
-            children: _kiziList
+            children: _listView
         );
     }
 }

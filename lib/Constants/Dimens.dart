@@ -6,5 +6,5 @@ class Dimens {
     /// TabView `EdgeInsets.symmetricH: 8.0`
     static const double TabPaddingV = 8.0;
 
-    
+    static const double MoreCardHeight = 12.0;
 }

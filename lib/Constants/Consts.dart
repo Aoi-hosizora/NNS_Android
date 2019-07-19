@@ -1,8 +1,8 @@
 class Consts {
     Consts._();
 
-    /// PageCnt in one refresh `3`
-    static const int KiziPagesForOneRefresh = 3;
+    /// PageCnt in one refresh `2`
+    static const int KiziPagesForOneRefresh = 2;
     /// ItemCnt in one page(determined by website) `3`
     static const int KiziItemsForOnePage = 3;
 

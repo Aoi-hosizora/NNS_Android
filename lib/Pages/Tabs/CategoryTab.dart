@@ -10,9 +10,14 @@ class CategoryTab extends StatefulWidget {
     State<CategoryTab> createState() => new _CategoryTabState();
 }
 
-class _CategoryTabState extends State<CategoryTab> {
+class _CategoryTabState extends State<CategoryTab> with AutomaticKeepAliveClientMixin {
+
     @override
     Widget build(BuildContext context) {
+        super.build(context);
         return Text(Strings.CategoryTab, style: Styles.GrayTextStyle);
     }
+    
+    @override
+    bool get wantKeepAlive => true;
 }

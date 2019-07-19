@@ -7,11 +7,12 @@ class Strings {
     static const String OpenUrlErrorToast = "ホームページが開けませんでした";
 
     static const String SeikatuTab = "中国での生活";
-    static const String GrammarTab = "文法講座";
     static const String ShikotoTab = "日本語教師のお仕事";
+    static const String GrammarTab = "文法講座";
     static const String CategoryTab = "カテゴリー";
 
     static const String Error = "エラー";
+    static const String NetWorkError = "ネットワークエラー";
     static const String More = "読み込み...";
     static const String KiziUpdateToast = "%s件の記事を更新しました";
 
