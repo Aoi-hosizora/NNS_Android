@@ -50,7 +50,7 @@ class _HomePageState extends State<HomePage> {
     /// Use Browser to open hp
     void _openBrowser() async {
         if (await canLaunch(NetUtils.NNS_URL))
-            // launch(NetUtils.NNS_URL, forceWebView: true); <- Widget Poi
+            // launch(NetUtils.NNS_HOME_URL, forceWebView: true); <- Widget Poi
             launch(NetUtils.NNS_URL);
         else
            CommonUtil.showToast(Strings.OpenUrlErrorToast);

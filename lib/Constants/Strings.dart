@@ -12,4 +12,11 @@ class Strings {
     static const String CategoryTab = "カテゴリー";
 
     static const String Error = "エラー";
+
+    static const String GrammarClassN1 = "Ｎ１文法";
+    static const String GrammarClassN1W = "Ｎ１　似ている文法の比較";
+    static const String GrammarClassN2 = "Ｎ２文法";
+    static const String GrammarClassN3 = "Ｎ３文法";
+    static const String GrammarClassN45 = "Ｎ４、Ｎ５文法";
+    static const String GrammarClassN0 = "Ｎ０文法";
 }
