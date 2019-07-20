@@ -3,8 +3,9 @@ class Strings {
 
     static const String AppTitle = "Flutter Demo";
     static const String HomePageTitle = "日本語の先生";
-    static const String OpenUrlToolBar = "ホームページを開く";
+    static const String OpenHPUrlToolBar = "ホームページを開く";
     static const String OpenUrlErrorToast = "ホームページが開けませんでした";
+    static const String OpenWebSiteToolBar = "ウェブサイトを開く";
 
     static const String SeikatuTab = "中国での生活";
     static const String ShigotoTab = "日本語教師のお仕事";
@@ -19,7 +20,9 @@ class Strings {
     static const String More = "もっと更新...";
     static const String Loading = "読み込み中...";
 
-    static const String KiziTitle = "詳細記事";
+    static const String KiziPageTitle = "詳細記事";
+    static const String GrammarPageTitle = "文法講座";
+
     static const String KiziUpdateToast = "%s件の記事を更新しました";
 
     static const String GrammarClassN1 = "Ｎ１文法";

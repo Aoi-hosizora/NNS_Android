@@ -11,11 +11,12 @@ class Dimens {
     /// Page `EdgeInsets.symmetricH: 8.0`
     static const double PagePaddingV = 8.0;
 
+    /// flutter_html `EdgeInsets.all`
+    static const double HTMLPadding = 8.0;
+
     /// GrammarTab Title ListTile Padding Edge `2.5`
     static const double GrammarTitleListTilePadding = 2.5;
-
-    /// Kizi ListView CircularProgressIndicator StrokeWidth `3.5`
-    static const double KiziCircularProgressStrokeWidth = 3.5;
+    
     /// showProgress message Padding
     static const double CircularProgressMessageHorizontalPadding = 20.0;
     /// showProgress circle Padding

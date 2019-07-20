@@ -30,13 +30,15 @@ class _SeikatuTabState extends State<SeikatuTab> with AutomaticKeepAliveClientMi
         
         WidgetsBinding.instance.addPostFrameCallback((callback) {
             _repo = OnlineListDataMgr.getInstance();
-            _more = WidgetUtil.getMoreCard(onTap: () {
-                _listView = WidgetUtil.addLoadingRemoveAdd(_listView, load: _load, more: _more);
-                setState(() {});
-                _refreshData();
-            });
-            _load = WidgetUtil.getLoadingCard();
-            _refreshData();
+            if (_repo.isFirstInit_SeikakuTab) {
+                _more = WidgetUtil.getMoreCard(onTap: () {
+                    _listView = WidgetUtil.addLoadingRemoveAdd(_listView, load: _load, more: _more);
+                    setState(() {});
+                    _refreshData();
+                });
+                _load = WidgetUtil.getLoadingCard();
+                _refreshData();                
+            }
         });
     }
 

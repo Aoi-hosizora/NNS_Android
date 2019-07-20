@@ -4,6 +4,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:nihongo_no_sensei/Constants/Dimens.dart';
 
 import '../../Constants/Consts.dart';
+import '../GrammarPage.dart';
 import '../../Models/OnlineListDataMgr.dart';
 import '../../Utils/NetUtil.dart';
 import '../../Utils/CommonUtil.dart';
@@ -29,13 +30,25 @@ class _GrammarTabState extends State<GrammarTab> with AutomaticKeepAliveClientMi
 
         WidgetsBinding.instance.addPostFrameCallback((callback) {
             _repo = OnlineListDataMgr.getInstance();
-            Consts.GrammarClass.forEach((gc) {
-                // TODO route to Grammar Tab
-                _moreList[gc] = WidgetUtil.getMoreTile(onTap: () => CommonUtil.showToast(gc));
-            });
-            _getData(); 
+            if (_repo.isFirstInit_GrammarTab) {
+                Consts.GrammarClass.forEach((gc) { // 6
+                    _moreList[gc] = WidgetUtil.getMoreTile(onTap: () => _onPressMore(gc));
+                });
+                _getData();
+            }
         });
     }
+
+    void _onPressMore(String grammarClass) =>
+        CommonUtil.showBottomSheet(
+            context: context,
+            content: ListView(
+                children: WidgetUtil.getCompleteGrammarClassListFromHashMap(
+                    grammarClass,
+                    gmrslists: _gmrsList
+                )
+            )
+        );
 
     @override
     void dispose() {
@@ -52,10 +65,14 @@ class _GrammarTabState extends State<GrammarTab> with AutomaticKeepAliveClientMi
                 _repo.grammarLists[gc] = await NetUtil.getGrammarPageData(gc);
                 CommonUtil.loge("_getData", _repo.grammarLists[gc].length);
                 _gmrsList[gc] = <ListTile>[];
-                for (var g in _repo.grammarLists[gc].sublist(0, Consts.GrammarListMinCnt)) {
-                    // TODO route to Grammar Tab
-                    _gmrsList[gc].add(WidgetUtil.getListTileFromGrammarListItem(g, () => CommonUtil.showToast(g.url)));
-                }
+                for (var g in _repo.grammarLists[gc])
+                    _gmrsList[gc].add(WidgetUtil.getListTileFromGrammarListItem(g, () =>
+                        Navigator.of(context).push(
+                            new MaterialPageRoute(
+                                builder: (context) => GrammarPage(gmr: g)
+                            )
+                        )
+                    ));
                 setState(() {});  
             }
         }
@@ -74,9 +91,13 @@ class _GrammarTabState extends State<GrammarTab> with AutomaticKeepAliveClientMi
             crossAxisCount: Dimens.StaggerCrossAxisCount,
             itemCount: Consts.GrammarClass.length,
             itemBuilder: (context, index) =>
-                WidgetUtil.getCompleteGrammarClassCardFromHashMap(
-                    Consts.GrammarClass[index],
-                    gmrslists: _gmrsList, morelists: _moreList
+                Card(
+                    child: Column(
+                        children: WidgetUtil.getCompleteGrammarClassListFromHashMap(
+                            Consts.GrammarClass[index],
+                            gmrslists: _gmrsList, morelists: _moreList, gmrCnt: Consts.GrammarListMinCnt
+                        )
+                    )
                 ),
             staggeredTileBuilder: (index) => StaggeredTile.fit(Dimens.StaggerFitCrossAxisCount),
         );

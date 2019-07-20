@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 title: Text(Strings.HomePageTitle, style: Styles.NormalTextStyle),
                 actions: <Widget>[
                     IconButton(
-                        tooltip: Strings.OpenUrlToolBar,
+                        tooltip: Strings.OpenHPUrlToolBar,
                         icon: Icon(Icons.web),
                         onPressed: () => CommonUtil.openBrowser(NetUtil.NNS_URL),
                     )

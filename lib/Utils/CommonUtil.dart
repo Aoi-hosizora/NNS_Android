@@ -79,6 +79,21 @@ class CommonUtil {
             )
         );
 
+    /// show Modal Bottom Sheet
+    /// 
+    /// @param `content` Widget
+    static void showBottomSheet({
+        @required BuildContext context,
+        @required Widget content,
+    }) =>
+        showModalBottomSheet(
+            context: context,
+            builder: (context) =>
+                Container(
+                    child: content,
+                )
+        );
+
     /// Use Browser to open hp
     static void openBrowser(String url) async {
         if (await canLaunch(url))

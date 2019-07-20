@@ -70,12 +70,11 @@ class WidgetUtil {
     static ListTile getLoadingTile() => 
         ListTile(
             title: Center(
-                    child: CircularProgressIndicator(
-                        backgroundColor: Colors.white,
-                        strokeWidth: Dimens.KiziCircularProgressStrokeWidth,
-                    ),
+                child: CircularProgressIndicator(
+                    backgroundColor: Colors.white
+                ),
             ),
-            onTap: () {},
+            // onTap: () {},
         );
 
     /// add loading remove More
@@ -87,8 +86,14 @@ class WidgetUtil {
         return ret;
     }
 
-    /// List<ListTile>(gmrs + more) -> Card
-    static Card getCompleteGrammarClassCardFromHashMap(String grammarClass, {HashMap<String, List<ListTile>> gmrslists, HashMap<String, ListTile> morelists}) {
+    /// List<ListTile>(gmrs + more) -> <Widget>[]
+    static List<Widget> getCompleteGrammarClassListFromHashMap(
+        String grammarClass, {
+            HashMap<String, List<ListTile>> gmrslists, 
+            HashMap<String, ListTile> morelists, 
+            int gmrCnt
+        }
+    ) {
         List<Widget> list = <Widget>[
             Padding(
                 child: Center(
@@ -99,8 +104,11 @@ class WidgetUtil {
         ];
 
         if (gmrslists != null && gmrslists[grammarClass] != null) {
+            if (gmrCnt == 0)
+                gmrCnt = gmrslists.length;
+
             list.add(Divider());
-            for (var gc in gmrslists[grammarClass]) {
+            for (var gc in gmrslists[grammarClass].sublist(0, gmrCnt)) {
                 list.add(gc);
                 list.add(Divider());
             }
@@ -109,11 +117,9 @@ class WidgetUtil {
             else
                 list.removeLast(); // Last divider
         }
+        else 
+            list.add(getLoadingTile());
 
-        return Card(
-            child: Column(
-                children: list
-            )
-        );
+        return list;
     }
 }

@@ -47,7 +47,14 @@ class _KiziPageState extends State<KiziPage> {
     Widget build(BuildContext context) {
         return Scaffold(
             appBar: AppBar(
-                title: Text(Strings.KiziTitle, style: Styles.NormalTextStyle),
+                title: Text(Strings.KiziPageTitle, style: Styles.NormalTextStyle),
+                actions: <Widget>[
+                    IconButton(
+                        tooltip: Strings.OpenWebSiteToolBar,
+                        icon: Icon(Icons.web),
+                        onPressed: () => CommonUtil.openBrowser(_kiziItem.url),
+                    )
+                ],
             ),
             body: ListView(
                 padding: EdgeInsets.symmetric(
@@ -56,7 +63,7 @@ class _KiziPageState extends State<KiziPage> {
                 ),
                 children: <Widget>[
                     Center(
-                      child: Text(_kiziItem.title, style: Styles.KiziTitle)
+                        child: Text(_kiziItem.title, style: Styles.KiziTitle)
                     ),
                     Text(_kiziItem.type, style: Styles.KiziSubTitle, textAlign: TextAlign.end),
                     Text(_kiziItem.date, style: Styles.KiziSubTitle, textAlign: TextAlign.end),
@@ -64,7 +71,7 @@ class _KiziPageState extends State<KiziPage> {
                     // Text(_kiziItem.content),
                     Html(
                         data: _kiziItem.content,
-                        padding: EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(Dimens.HTMLPadding),
                         defaultTextStyle: Styles.KiziContent,
                         showImages: true,
                         onImageTap: (img) => CommonUtil.showToast(img),

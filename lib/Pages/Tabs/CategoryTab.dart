@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../Constants/Strings.dart';
 import '../../Constants/Styles.dart';
+import '../../Models/OnlineListDataMgr.dart';
 
 class CategoryTab extends StatefulWidget {
     CategoryTab({Key key}) : super(key: key);
@@ -11,6 +12,19 @@ class CategoryTab extends StatefulWidget {
 }
 
 class _CategoryTabState extends State<CategoryTab> with AutomaticKeepAliveClientMixin {
+
+    OnlineListDataMgr _repo;
+
+    @override
+    void initState() { 
+        super.initState();
+        WidgetsBinding.instance.addPostFrameCallback((callback) {
+            _repo = OnlineListDataMgr.getInstance();
+            if (_repo.isFirstInit_CategoryTab) {
+                //
+            }
+        });
+    }
 
     @override
     Widget build(BuildContext context) {

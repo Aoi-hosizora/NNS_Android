@@ -14,6 +14,11 @@ class OnlineListDataMgr {
         return _instance;
     }
 
+    bool isFirstInit_SeikakuTab = true;
+    bool isFirstInit_ShigotoTab = true;
+    bool isFirstInit_GrammarTab = true;
+    bool isFirstInit_CategoryTab = true;
+
     /// 中国での生活 Kizi List
     List<KiziListItem> seikatuKizis = <KiziListItem>[];
     /// 中国での生活 refresh Cnt

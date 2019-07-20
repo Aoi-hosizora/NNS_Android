@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../Models/Lists/KiziListItem.dart';
 import '../../Models/OnlineListDataMgr.dart';
 import '../../Constants/Consts.dart';
+import '../../Constants/Dimens.dart';
 import '../../Utils/CommonUtil.dart';
 import '../../Utils/NetUtil.dart';
 import '../../Utils/WidgetUtil.dart';
@@ -29,13 +30,15 @@ class _ShigotoTabState extends State<ShigotoTab> with AutomaticKeepAliveClientMi
         
         WidgetsBinding.instance.addPostFrameCallback((callback) {
             _repo = OnlineListDataMgr.getInstance();
-            _more = WidgetUtil.getMoreCard(onTap: () {
-                _listView = WidgetUtil.addLoadingRemoveAdd(_listView, load: _load, more: _more);
-                setState(() {});
-                _refreshData();
-            });
-            _load = WidgetUtil.getLoadingCard();
-            _refreshData();
+            if (_repo.isFirstInit_ShigotoTab) {
+                _more = WidgetUtil.getMoreCard(onTap: () {
+                    _listView = WidgetUtil.addLoadingRemoveAdd(_listView, load: _load, more: _more);
+                    setState(() {});
+                    _refreshData();
+                });
+                _load = WidgetUtil.getLoadingCard();
+                _refreshData();                
+            }
         });
     }
 

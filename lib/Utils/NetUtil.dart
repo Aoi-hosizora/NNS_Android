@@ -9,6 +9,7 @@ import './CommonUtil.dart';
 import '../Models/Lists/KiziListItem.dart';
 import '../Models/Lists/GrammarListItem.dart';
 import '../Models/Entities/KiziItem.dart';
+import '../Models/Entities/GrammarItem.dart';
 
 class NetUtil {
     NetUtil._();
@@ -94,7 +95,7 @@ class NetUtil {
                 lias = clearfix.querySelector("p#linkn0").nextElementSibling.nextElementSibling.querySelectorAll("a");
             break;
         }
-        return lias.map((a) => GrammarListItem(title: a.text, url: a.attributes["href"])).toList();
+        return lias.map((a) => GrammarListItem(title: a.text, url: a.attributes["href"], grammarClass: grammarClass)).toList();
     }
 
     /// Parse Relative Url To Absolute Url
@@ -184,5 +185,16 @@ class NetUtil {
         */
 
         return KiziItem(type: item.type, title: title, content: content, url: item.url, date: date);
+    }
+
+    static Future<GrammarItem> getGmrContent(GrammarListItem item) async {
+        String httpDoc = await _getResponse(item.url);
+        Document document = parse(httpDoc);
+        
+        String title = document.querySelector(".entry-title").text;
+        document.querySelector("#mainEntity .clearfix .meta").remove();
+        String content = _parseImgHtml(document.querySelector("#mainEntity .clearfix").innerHtml);
+
+        return GrammarItem(title: title, url: item.url, content: content, grammarClass: item.grammarClass);
     }
 }
