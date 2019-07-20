@@ -21,14 +21,20 @@ class WidgetUtil {
                     style: Styles.TitleTextStyle, 
                     maxLines: Consts.CardTitleMaxLine, overflow: TextOverflow.ellipsis
                 ),
-                subtitle: Text(
-                    kizi.arasuzi, 
-                    style: Styles.SubTitleTextStyle, 
-                    maxLines: Consts.CardSubTitleMaxLine, overflow: TextOverflow.ellipsis
-                ),
-                trailing: Text(
-                    kizi.date, 
-                    style: Styles.SubTitleTextStyle
+                subtitle: Column(
+                    children: <Widget>[
+                        Text(
+                            kizi.date, 
+                            style: Styles.SubTitleTextStyle,
+                            textAlign: TextAlign.left,
+                        ),
+                        Text(
+                            kizi.arasuzi, 
+                            style: Styles.SubTitleTextStyle, 
+                            maxLines: Consts.CardSubTitleMaxLine, overflow: TextOverflow.ellipsis
+                        ),
+                    ],
+                    crossAxisAlignment: CrossAxisAlignment.start,
                 ),
                 onTap: onTap,
             )

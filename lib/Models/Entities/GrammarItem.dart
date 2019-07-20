@@ -1,6 +1,4 @@
-import '../Lists/GrammarListItem.dart';
-
-class GrammarItem extends GrammarListItem {
+class GrammarItem {
 
     GrammarItem({this.title, this.content, this.url}) : super();
 

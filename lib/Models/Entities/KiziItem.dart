@@ -1,16 +1,19 @@
-import '../Lists/KiziListItem.dart';
-import './KiziType.dart';
+import 'package:nihongo_no_sensei/Models/Lists/KiziListItem.dart';
 
-class KiziItem extends KiziListItem {
+class KiziItem {
 
-    KiziItem(this.type, {this.title, this.content, this.url, this.date}) : super();
+    KiziItem({this.type, this.title, this.content, this.url, this.date});
+
+    KiziItem.fromList({KiziListItem kizi}) : this(
+        type: kizi.type, title: kizi.title, content: kizi.arasuzi, url: kizi.url, date: kizi.date
+    );
 
     String title;
     String content;
     String url;
     String date;
 
-    KiziType type;
+    String type;
 
     @override
     String toString() {

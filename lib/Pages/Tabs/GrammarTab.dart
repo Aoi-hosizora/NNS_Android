@@ -27,12 +27,14 @@ class _GrammarTabState extends State<GrammarTab> with AutomaticKeepAliveClientMi
         super.initState();
         CommonUtil.loge("_GrammarTabState", "initState");
 
-        _repo = OnlineListDataMgr.getInstance();
-        Consts.GrammarClass.forEach((gc) {
-            // TODO route to Grammar Tab
-            _moreList[gc] = WidgetUtil.getMoreTile(onTap: () => CommonUtil.showToast(gc));
+        WidgetsBinding.instance.addPostFrameCallback((callback) {
+            _repo = OnlineListDataMgr.getInstance();
+            Consts.GrammarClass.forEach((gc) {
+                // TODO route to Grammar Tab
+                _moreList[gc] = WidgetUtil.getMoreTile(onTap: () => CommonUtil.showToast(gc));
+            });
+            _getData(); 
         });
-        _getData(); 
     }
 
     @override
@@ -47,7 +49,7 @@ class _GrammarTabState extends State<GrammarTab> with AutomaticKeepAliveClientMi
         if (_repo.grammarLists.length != Consts.GrammarClass.length) {
             _gmrsList = HashMap<String, List<ListTile>>();
             for (String gc in Consts.GrammarClass) {
-                _repo.grammarLists[gc] = await NetUtils.getGrammarPageData(gc);
+                _repo.grammarLists[gc] = await NetUtil.getGrammarPageData(gc);
                 CommonUtil.loge("_getData", _repo.grammarLists[gc].length);
                 _gmrsList[gc] = <ListTile>[];
                 for (var g in _repo.grammarLists[gc].sublist(0, Consts.GrammarListMinCnt)) {

@@ -25,6 +25,11 @@ class Consts {
     static const String N45 = Strings.GrammarClassN45;
     static const String N0 = Strings.GrammarClassN0;
 
+    static const String TSeikatu = Strings.KiziTypeSeikatu;
+    static const String TShitoko = Strings.KiziTypeShigoto;
+
     /// RefreshIndicator onRefresh Future Delay `1s`
     static const Duration RefreshTime = Duration(seconds: 1);
+    /// Open new page wait to get data `200ms`
+    static const Duration WaitingGetDataTime = Duration(milliseconds: 200);
 }

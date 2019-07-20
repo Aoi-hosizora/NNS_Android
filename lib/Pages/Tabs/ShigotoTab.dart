@@ -6,17 +6,19 @@ import '../../Constants/Consts.dart';
 import '../../Utils/CommonUtil.dart';
 import '../../Utils/NetUtil.dart';
 import '../../Utils/WidgetUtil.dart';
+import '../KiziPage.dart';
 
-class ShikotoTab extends StatefulWidget {
-    ShikotoTab({Key key}) : super(key: key);
+class ShigotoTab extends StatefulWidget {
+    ShigotoTab({Key key}) : super(key: key);
 
     @override
-    State<ShikotoTab> createState() => new _ShikotoTabState();
+    State<ShigotoTab> createState() => new _ShigotoTabState();
 }
 
-class _ShikotoTabState extends State<ShikotoTab> with AutomaticKeepAliveClientMixin {
+class _ShigotoTabState extends State<ShigotoTab> with AutomaticKeepAliveClientMixin {
 
     Card _more;
+    Card _load;
     List<Widget> _listView = <Widget>[];
     OnlineListDataMgr _repo;
 
@@ -25,9 +27,16 @@ class _ShikotoTabState extends State<ShikotoTab> with AutomaticKeepAliveClientMi
         super.initState();
         CommonUtil.loge("_ShikotoTabState", "initState");
         
-        _repo = OnlineListDataMgr.getInstance();
-        _more = WidgetUtil.getMoreCard(onTap: () => _refreshData());
-        _refreshData();
+        WidgetsBinding.instance.addPostFrameCallback((callback) {
+            _repo = OnlineListDataMgr.getInstance();
+            _more = WidgetUtil.getMoreCard(onTap: () {
+                _listView = WidgetUtil.addLoadingRemoveAdd(_listView, load: _load, more: _more);
+                setState(() {});
+                _refreshData();
+            });
+            _load = WidgetUtil.getLoadingCard();
+            _refreshData();
+        });
     }
 
     @override
@@ -44,15 +53,20 @@ class _ShikotoTabState extends State<ShikotoTab> with AutomaticKeepAliveClientMi
         }
 
         for (var i = 0; i < Consts.KiziPagesForOneRefresh; i++) {
-            List<KiziListItem> newkizis = await NetUtils.getSHIGOTOPageData(page: ++_repo.shikotoKiziCnt);
+            List<KiziListItem> newkizis = await NetUtil.getSHIGOTOPageData(page: ++_repo.shikotoKiziCnt);
             CommonUtil.loge("_refreshData", "_repo.shikotoKiziCnt: " + _repo.shikotoKiziCnt.toString());
             _repo.shikotoKizis.addAll(newkizis);
         }
 
         _listView = <Widget>[];
         for (var kizi in _repo.shikotoKizis) 
-            // TODO route to Kizi Page
-            _listView.add(WidgetUtil.getCardFromKiziListItem(kizi, () => CommonUtil.showToast(kizi.url)));
+            _listView.add(WidgetUtil.getCardFromKiziListItem(kizi, () =>
+                Navigator.of(context).push(
+                    new MaterialPageRoute(
+                        builder: (context) => KiziPage(kizi: kizi)
+                    )
+                )
+            ));
         _listView.add(_more);
 
         setState(() {});

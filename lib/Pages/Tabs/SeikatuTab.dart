@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nihongo_no_sensei/Constants/Dimens.dart';
 
 import '../../Models/OnlineListDataMgr.dart';
 import '../../Models/Lists/KiziListItem.dart';
@@ -6,6 +7,7 @@ import '../../Constants/Consts.dart';
 import '../../Utils/CommonUtil.dart';
 import '../../Utils/NetUtil.dart';
 import '../../Utils/WidgetUtil.dart';
+import '../KiziPage.dart';
 
 class SeikatuTab extends StatefulWidget {
     SeikatuTab({Key key}) : super(key: key);
@@ -26,14 +28,16 @@ class _SeikatuTabState extends State<SeikatuTab> with AutomaticKeepAliveClientMi
         super.initState();
         CommonUtil.loge("_SeikatuTabState", "initState");
         
-        _repo = OnlineListDataMgr.getInstance();
-        _more = WidgetUtil.getMoreCard(onTap: () {
-            _listView = WidgetUtil.addLoadingRemoveAdd(_listView, load: _load, more: _more);
-            setState(() {});
+        WidgetsBinding.instance.addPostFrameCallback((callback) {
+            _repo = OnlineListDataMgr.getInstance();
+            _more = WidgetUtil.getMoreCard(onTap: () {
+                _listView = WidgetUtil.addLoadingRemoveAdd(_listView, load: _load, more: _more);
+                setState(() {});
+                _refreshData();
+            });
+            _load = WidgetUtil.getLoadingCard();
             _refreshData();
         });
-        _load = WidgetUtil.getLoadingCard();
-        _refreshData();
     }
 
     @override
@@ -50,15 +54,20 @@ class _SeikatuTabState extends State<SeikatuTab> with AutomaticKeepAliveClientMi
         }
 
         for (var i = 0; i < Consts.KiziPagesForOneRefresh; i++) {
-            List<KiziListItem> newkizis = await NetUtils.getSEIKATUPageData(page: ++_repo.seikatuKiziCnt);
+            List<KiziListItem> newkizis = await NetUtil.getSEIKATUPageData(page: ++_repo.seikatuKiziCnt);
             CommonUtil.loge("_refreshData", "_repo.seikatuKiziCnt: " + _repo.seikatuKiziCnt.toString());
             _repo.seikatuKizis.addAll(newkizis);
         }
 
         _listView = <Widget>[];
-        for (var kizi in _repo.seikatuKizis) 
-            // TODO route to Kizi Page
-            _listView.add(WidgetUtil.getCardFromKiziListItem(kizi, () => CommonUtil.showToast(kizi.url)));
+        for (var kizi in _repo.seikatuKizis)
+            _listView.add(WidgetUtil.getCardFromKiziListItem(kizi, () =>
+                Navigator.of(context).push(
+                    new MaterialPageRoute(
+                        builder: (context) => KiziPage(kizi: kizi)
+                    )
+                )
+            ));
         _listView.add(_more);
 
         setState(() {});

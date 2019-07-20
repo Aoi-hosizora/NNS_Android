@@ -26,5 +26,6 @@ url_launcher: ^5.0.2
 http: ^0.12.0+2
 html: ^0.14.0+2
 sprintf: ^4.0.2
-flutter_staggered_grid_view: "^0.2.7"
+flutter_staggered_grid_view: ^0.2.7
+flutter_html: ^0.10.4
 ```

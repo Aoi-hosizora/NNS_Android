@@ -6,11 +6,20 @@ class Dimens {
     /// TabView `EdgeInsets.symmetricH: 8.0`
     static const double TabPaddingV = 8.0;
 
+    /// Page `EdgeInsets.symmetricV: 6.0`
+    static const double PagePaddingH = 6.0;
+    /// Page `EdgeInsets.symmetricH: 8.0`
+    static const double PagePaddingV = 8.0;
+
     /// GrammarTab Title ListTile Padding Edge `2.5`
     static const double GrammarTitleListTilePadding = 2.5;
 
     /// Kizi ListView CircularProgressIndicator StrokeWidth `3.5`
     static const double KiziCircularProgressStrokeWidth = 3.5;
+    /// showProgress message Padding
+    static const double CircularProgressMessageHorizontalPadding = 20.0;
+    /// showProgress circle Padding
+    static const double CircularProgressHorizontalPadding = 8.0;
 
     /// StaggeredGridView crossAxisSpacing(H) `5`
     static const double StaggerCrossAxisSpacing = 5.0;

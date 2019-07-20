@@ -13,4 +13,8 @@ class Styles {
     static const TitleTextStyle = const TextStyle(locale: Locale("ja", "JP"), color: Colors.black, fontSize: 15);
 
     static const SubTitleTextStyle = const TextStyle(locale: Locale("ja", "JP"), color: Colors.grey, fontSize: 12);
+    
+    static const KiziTitle = const TextStyle(locale: Locale("ja", "JP"), fontSize: 22);
+    static const KiziSubTitle = const TextStyle(locale: Locale("ja", "JP"), color: Colors.grey, fontSize: 14);
+    static const KiziContent = const TextStyle(locale: Locale("ja", "JP"), fontSize: 16);
 }

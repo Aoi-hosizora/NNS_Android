@@ -4,14 +4,14 @@ import "package:html/dom.dart";
 import 'package:sprintf/sprintf.dart';
 
 import '../Constants/Consts.dart';
+import '../Constants/Strings.dart';
 import './CommonUtil.dart';
 import '../Models/Lists/KiziListItem.dart';
 import '../Models/Lists/GrammarListItem.dart';
 import '../Models/Entities/KiziItem.dart';
-import '../Models/Entities/KiziType.dart';
 
-class NetUtils {
-    NetUtils._();
+class NetUtil {
+    NetUtil._();
 
     /// NNS HP URL: `https://nihongonosensei.net/`
     static const String NNS_URL = "https://nihongonosensei.net/";
@@ -27,13 +27,6 @@ class NetUtils {
 
     /// User-Agent
     static const _UA = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36";
-
-    /// Img Absolute Url: `http://nihongonosensei.net/pic/`
-    static const _Img_A_URL = "${NNS_URL}pic/";
-    /// Img Relative Url: `./pic/`
-    static const _Img_R_URL = "./pic/";
-    /// Moto Img Html Block: `<img src="`
-    static const _Img_Block = "<img src=\"";
 
     //////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////// Private: ////////////////////////////////////////
@@ -57,7 +50,7 @@ class NetUtils {
     }
 
     /// Get One Page Items List
-    static Future<List<KiziListItem>> _getOnePageList(String url, {int page: 1}) async {
+    static Future<List<KiziListItem>> _getOnePageList(String url, String type, {int page: 1}) async {
         String htmlDoc = await _getResponse(sprintf("$url$_NNS_PAGE_URL", [page]));
         Document doc = parse(htmlDoc);
         Element section = doc.querySelector("#list");
@@ -70,7 +63,7 @@ class NetUtils {
         List<String> dates = section.querySelectorAll("section time").map((time) => time.text).toList();
 
         for (var idx = 0; idx < titles.length; idx++) 
-            listitems.add(KiziListItem(title: titles[idx], url: urls[idx], arasuzi: arasuzi[idx], date: dates[idx]));
+            listitems.add(KiziListItem(title: titles[idx], url: urls[idx], arasuzi: arasuzi[idx], date: dates[idx], type: type));
 
         return listitems;
     }
@@ -106,7 +99,10 @@ class NetUtils {
 
     /// Parse Relative Url To Absolute Url
     static String _parseImgHtml(String htmlDoc) {
-        return htmlDoc.replaceAll("$_Img_Block$_Img_R_URL", "$_Img_Block$_Img_A_URL");
+        return htmlDoc
+            .replaceAll("<img src=\"./pic/", "<img src=\"${NNS_URL}pic/") // <img src="./pic/ -> <img src="https://nihongonosensei.net/pic/
+            .replaceAll("<noscript>", "")
+            .replaceAll("</noscript>", "");
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -116,7 +112,7 @@ class NetUtils {
     /// 
     /// @param `page` 1..n
     static Future<List<KiziListItem>> getSHIGOTOPageData({int page: 1}) async {
-        List<KiziListItem> shigotos = await _getOnePageList(NNS_SHIGOTO_URL, page: page);
+        List<KiziListItem> shigotos = await _getOnePageList(NNS_SHIGOTO_URL, Consts.TShitoko, page: page);
         // CommonUtil.loge("getSHIGOTOData", shigotos.length.toString() + shigotos.toString());
         return shigotos;
     }
@@ -125,7 +121,7 @@ class NetUtils {
     /// 
     /// @param `page` 1..n
     static Future<List<KiziListItem>> getSEIKATUPageData({int page: 1}) async {
-        List<KiziListItem> setkatus = await _getOnePageList(NNS_SEIKATU_URL, page: page);
+        List<KiziListItem> setkatus = await _getOnePageList(NNS_SEIKATU_URL, Consts.TSeikatu, page: page);
         // CommonUtil.loge("getSHIGOTOData", setkatus.length.toString() + setkatus.toString());
         return setkatus;
     }
@@ -143,11 +139,50 @@ class NetUtils {
     /// 
     /// @param `type` KiziType
     /// @param `item` KiziListItem
-    static Future<KiziItem> getKiziContent(KiziType type, KiziListItem item) async {
+    static Future<KiziItem> getKiziContent(KiziListItem item) async {
         String httpDoc = await _getResponse(item.url); // new
         Document document = parse(httpDoc);
+
         String title = document.querySelector("#mainEntity .entry-title").text;
-        String content = _parseImgHtml(document.querySelector("#mainEntity .clearfix").text);
-        return KiziItem(type, title: title, content: content, url: item.url, date: item.date);
+        String date = document.querySelector("#mainEntity time").text;
+
+        // String content = _parseImgHtml(document.querySelector("#mainEntity .clearfix").text).replaceFirst(item.type, "");
+        document.querySelector("#mainEntity .clearfix .meta").remove();
+        String content = _parseImgHtml(document.querySelector("#mainEntity .clearfix").innerHtml);
+
+        /*
+        <p class="meta">
+            <i class="fa fas fa-folder"></i>
+            <span class="category" itemprop="keywords">
+                <a href="https://nihongonosensei.net/?cat=3">中国での生活</a>
+            </span>
+        </p>
+        */
+
+        /* inner: 
+        <p>
+            <img 
+                src="data:image/gif;base64,R0lGODlhAQABAPAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAICTAEAOw=="
+                class="lazy" 
+                data-src="./pic/19061607.jpg" 
+                alt=""
+            >
+            <noscript>
+                <img 
+                    src="https://nihongonosensei.net/pic/19061607.jpg" 
+                    alt="" 
+                />
+            </noscript>
+        </p> 
+        */
+
+        /* text: 
+        <img 
+            src="https://nihongonosensei.net/pic/19061607.jpg" 
+            alt="" 
+        />
+        */
+
+        return KiziItem(type: item.type, title: title, content: content, url: item.url, date: date);
     }
 }

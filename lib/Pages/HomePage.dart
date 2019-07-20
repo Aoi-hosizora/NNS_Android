@@ -1,43 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:nihongo_no_sensei/Utils/CommonUtil.dart';
-import 'package:nihongo_no_sensei/Utils/NetUtil.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../Constants/Strings.dart';
 import '../Constants/Dimens.dart';
 import '../Constants/Styles.dart';
+import '../Utils/CommonUtil.dart';
+import '../Utils/NetUtil.dart';
 
 import './Tabs/SeikatuTab.dart';
 import './Tabs/GrammarTab.dart';
-import './Tabs/ShikotoTab.dart';
+import './Tabs/ShigotoTab.dart';
 import './Tabs/CategoryTab.dart';
 
 class HomePage extends StatefulWidget {
-	
-	final String title = Strings.HomePageTitle;
-
-	HomePage({Key key}) : super(key: key);
-	
-	@override
-	State<HomePage> createState() => new _HomePageState();
+    HomePage({Key key}) : super(key: key);
+    
+    @override
+    State<HomePage> createState() => new _HomePageState();
 }
 class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
 
     /// Tab Strings(From Strings)
     List<String> _tabs = <String>[
-        Strings.SeikatuTab, Strings.ShikotoTab, Strings.GrammarTab, Strings.CategoryTab
+        Strings.SeikatuTab, Strings.ShigotoTab, Strings.GrammarTab, Strings.CategoryTab
     ];
 
     TabController _tabController;
 
-    Widget _seikatuTab, _shikototab, _grammarTab, _categoryTab;
+    Widget _seikatuTab, _shigototab, _grammarTab, _categoryTab;
 
     @override
     void initState() {
         super.initState();
         
         _seikatuTab = SeikatuTab();
-        _shikototab = ShikotoTab();
+        _shigototab = ShigotoTab();
         _grammarTab = GrammarTab();
         _categoryTab = CategoryTab();
 
@@ -63,8 +59,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         switch (tab) {
             case Strings.SeikatuTab:
                 return _seikatuTab;
-            case Strings.ShikotoTab:
-                return _shikototab;
+            case Strings.ShigotoTab:
+                return _shigototab;
             case Strings.GrammarTab:
                 return _grammarTab;
             case Strings.CategoryTab:
@@ -73,15 +69,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         return Center(
             child: Text(Strings.Error)
         );
-    }
-
-    /// Use Browser to open hp
-    void _openBrowser() async {
-        if (await canLaunch(NetUtils.NNS_URL))
-            // launch(NetUtils.NNS_HOME_URL, forceWebView: true); <- Widget Poi
-            launch(NetUtils.NNS_URL);
-        else
-           CommonUtil.showToast(Strings.OpenUrlErrorToast);
     }
     
     @override
@@ -93,7 +80,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                     IconButton(
                         tooltip: Strings.OpenUrlToolBar,
                         icon: Icon(Icons.web),
-                        onPressed: () => _openBrowser(),
+                        onPressed: () => CommonUtil.openBrowser(NetUtil.NNS_URL),
                     )
                 ],
                 bottom: TabBar(
