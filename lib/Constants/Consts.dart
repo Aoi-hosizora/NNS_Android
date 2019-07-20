@@ -1,3 +1,5 @@
+import '../Constants/Strings.dart';
+
 class Consts {
     Consts._();
 
@@ -13,4 +15,16 @@ class Consts {
 
     /// GrammarList mininum cnt `3`
     static const int GrammarListMinCnt = 3;
+
+    static const List<String> GrammarClass = <String>[N1, N1W, N2, N3, N45, N0];
+    
+    static const String N1 = Strings.GrammarClassN1;
+    static const String N1W = Strings.GrammarClassN1W;
+    static const String N2 = Strings.GrammarClassN2;
+    static const String N3 = Strings.GrammarClassN3;
+    static const String N45 = Strings.GrammarClassN45;
+    static const String N0 = Strings.GrammarClassN0;
+
+    /// RefreshIndicator onRefresh Future Delay `1s`
+    static const Duration RefreshTime = Duration(seconds: 1);
 }

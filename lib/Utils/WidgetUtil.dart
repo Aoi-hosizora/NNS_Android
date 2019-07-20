@@ -12,6 +12,7 @@ import '../Models/Lists/GrammarListItem.dart';
 class WidgetUtil {
     WidgetUtil._();
 
+    /// KiziListItem(4) -> Card(3)
     static Card getCardFromKiziListItem(KiziListItem kizi, void onTap()) =>
         Card(
             child: ListTile(
@@ -33,34 +34,80 @@ class WidgetUtil {
             )
         );
 
-    static Card getCardFromGrammarListItem(GrammarListItem gm, void onTap()) =>
-        Card(
-            child: ListTile(
+    /// GrammarListItem(2) -> ListTile(1)
+    static ListTile getListTileFromGrammarListItem(GrammarListItem gm, void onTap()) =>
+         ListTile(
                 title: Text(gm.title, style: Styles.TitleTextStyle),
                 onTap: onTap
-            )
-        );  
+            );
 
-    static Card getMore(void onTap()) =>
+    /// More Card(ListTile)
+    static Card getMoreCard({void onTap()}) =>
         Card(
-            child: ListTile(
-                title: Center(child: Text(Strings.More, style: Styles.TitleTextStyle)),
-                onTap: () => onTap(),
-            ),
+            child: getMoreTile(onTap: onTap)
+        );
+    
+    /// More ListTile
+    static ListTile getMoreTile({void onTap()}) =>
+        ListTile(
+            title: Center(child: Text(Strings.More, style: Styles.TitleTextStyle)),
+            onTap: () => onTap(),
         );
 
-    static ListView getCompleteGrammarListViewFromHashMap(HashMap<String, List<Card>> cardlists, HashMap<String, Card> mores, String grammarClass) {
+    /// Loading Card(ListTile)
+    static Card getLoadingCard() =>
+        Card(
+            child: getLoadingTile()
+        );
+
+    /// Loading ListTile
+    static ListTile getLoadingTile() => 
+        ListTile(
+            title: Center(
+                    child: CircularProgressIndicator(
+                        backgroundColor: Colors.white,
+                        strokeWidth: Dimens.KiziCircularProgressStrokeWidth,
+                    ),
+            ),
+            onTap: () {},
+        );
+
+    /// add loading remove More
+    static List<Widget> addLoadingRemoveAdd(List<Widget> list, {Card load, Card more}) {
+        var ret = <Widget>[];
+        ret.addAll(list);
+        ret.remove(more);
+        ret.add(load);
+        return ret;
+    }
+
+    /// List<ListTile>(gmrs + more) -> Card
+    static Card getCompleteGrammarClassCardFromHashMap(String grammarClass, {HashMap<String, List<ListTile>> gmrslists, HashMap<String, ListTile> morelists}) {
         List<Widget> list = <Widget>[
-            Text(grammarClass, style: Styles.NormalTextStyle)
+            Padding(
+                child: Center(
+                    child: Text(grammarClass, style: Styles.NormalTextStyle)
+                ),
+                padding: EdgeInsets.all(Dimens.GrammarTitleListTilePadding)
+            )
         ];
 
-        if (cardlists != null && cardlists[grammarClass] != null)
-            list.addAll(cardlists[grammarClass]);
+        if (gmrslists != null && gmrslists[grammarClass] != null) {
+            list.add(Divider());
+            for (var gc in gmrslists[grammarClass]) {
+                list.add(gc);
+                list.add(Divider());
+            }
+            if (morelists != null)
+                list.add(morelists[grammarClass]);
+            else
+                list.removeLast(); // Last divider
+        }
 
-        list.add(mores[grammarClass]);
-
-        return ListView(
-            children: list
+        return Card(
+            child: Column(
+                children: list
+            )
         );
     }
 }

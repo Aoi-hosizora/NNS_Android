@@ -13,7 +13,7 @@ class Strings {
 
     static const String Error = "エラー";
     static const String NetWorkError = "ネットワークエラー";
-    static const String More = "読み込み...";
+    static const String More = "もっと更新...";
     static const String KiziUpdateToast = "%s件の記事を更新しました";
 
     static const String GrammarClassN1 = "Ｎ１文法";

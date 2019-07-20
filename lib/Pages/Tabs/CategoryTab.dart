@@ -15,7 +15,7 @@ class _CategoryTabState extends State<CategoryTab> with AutomaticKeepAliveClient
     @override
     Widget build(BuildContext context) {
         super.build(context);
-        return Text(Strings.CategoryTab, style: Styles.GrayTextStyle);
+        return Center(child: Text(Strings.CategoryTab, style: Styles.GrayTextStyle));
     }
     
     @override

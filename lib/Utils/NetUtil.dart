@@ -3,10 +3,12 @@ import "package:html/parser.dart";
 import "package:html/dom.dart";
 import 'package:sprintf/sprintf.dart';
 
+import '../Constants/Consts.dart';
 import './CommonUtil.dart';
 import '../Models/Lists/KiziListItem.dart';
 import '../Models/Lists/GrammarListItem.dart';
-import '../Models/Entities/Kizi.dart';
+import '../Models/Entities/KiziItem.dart';
+import '../Models/Entities/KiziType.dart';
 
 class NetUtils {
     NetUtils._();
@@ -80,22 +82,22 @@ class NetUtils {
         Element clearfix = document.querySelector(".clearfix");
         List<Element> lias = new List<Element>();
         switch (grammarClass) {
-            case GrammarListItem.N1:
+            case Consts.N1:
                 lias = clearfix.querySelector("p#linkn1").nextElementSibling.querySelectorAll("a");
             break;
-            case GrammarListItem.N1W:
+            case Consts.N1W:
                 lias = clearfix.querySelector("p#linkn1").nextElementSibling.nextElementSibling.nextElementSibling.querySelectorAll("a");
             break;
-            case GrammarListItem.N2:
+            case Consts.N2:
                 lias = clearfix.querySelector("p#linkn2").nextElementSibling.querySelectorAll("a");
             break;
-            case GrammarListItem.N3:
+            case Consts.N3:
                 lias = clearfix.querySelector("p#linkn3").nextElementSibling.querySelectorAll("a");
             break;
-            case GrammarListItem.N45:
+            case Consts.N45:
                 lias = clearfix.querySelector("p#linkn4n5").nextElementSibling.querySelectorAll("a");
             break;
-            case GrammarListItem.N0:
+            case Consts.N0:
                 lias = clearfix.querySelector("p#linkn0").nextElementSibling.nextElementSibling.querySelectorAll("a");
             break;
         }
@@ -139,12 +141,13 @@ class NetUtils {
 
     /// get 日本語教師のお仕事 中国での生活 記事 htmlDoc
     /// 
+    /// @param `type` KiziType
     /// @param `item` KiziListItem
-    static Future<Kizi> getKiziContent(KiziListItem item) async {
-        String httpDoc = await _getResponse(item.url);
+    static Future<KiziItem> getKiziContent(KiziType type, KiziListItem item) async {
+        String httpDoc = await _getResponse(item.url); // new
         Document document = parse(httpDoc);
         String title = document.querySelector("#mainEntity .entry-title").text;
         String content = _parseImgHtml(document.querySelector("#mainEntity .clearfix").text);
-        return Kizi(title: title, content: content, url: item.url, date: item.date);
+        return KiziItem(type, title: title, content: content, url: item.url, date: item.date);
     }
 }

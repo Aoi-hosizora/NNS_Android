@@ -1,0 +1,3 @@
+enum KiziType {
+    Seikatu, Shitoko
+}

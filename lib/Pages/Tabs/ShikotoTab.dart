@@ -26,7 +26,7 @@ class _ShikotoTabState extends State<ShikotoTab> with AutomaticKeepAliveClientMi
         CommonUtil.loge("_ShikotoTabState", "initState");
         
         _repo = OnlineListDataMgr.getInstance();
-        _more = WidgetUtil.getMore(() => _refreshData());
+        _more = WidgetUtil.getMoreCard(onTap: () => _refreshData());
         _refreshData();
     }
 
@@ -36,7 +36,13 @@ class _ShikotoTabState extends State<ShikotoTab> with AutomaticKeepAliveClientMi
         super.dispose();
     }
 
-    void _refreshData() async {
+    Future<void> _refreshData({bool isNewData: false}) async {
+        // TODO add toast(save state problem)
+        if (isNewData) {
+            _repo.shikotoKiziCnt = 0;
+            _repo.shikotoKizis.clear();
+        }
+
         for (var i = 0; i < Consts.KiziPagesForOneRefresh; i++) {
             List<KiziListItem> newkizis = await NetUtils.getSHIGOTOPageData(page: ++_repo.shikotoKiziCnt);
             CommonUtil.loge("_refreshData", "_repo.shikotoKiziCnt: " + _repo.shikotoKiziCnt.toString());
@@ -45,10 +51,15 @@ class _ShikotoTabState extends State<ShikotoTab> with AutomaticKeepAliveClientMi
 
         _listView = <Widget>[];
         for (var kizi in _repo.shikotoKizis) 
+            // TODO route to Kizi Page
             _listView.add(WidgetUtil.getCardFromKiziListItem(kizi, () => CommonUtil.showToast(kizi.url)));
         _listView.add(_more);
 
         setState(() {});
+    }
+
+    Future<void> _onRefresh() async {
+        await _refreshData(isNewData: true);
     }
     
     @override
@@ -57,8 +68,11 @@ class _ShikotoTabState extends State<ShikotoTab> with AutomaticKeepAliveClientMi
     @override
     Widget build(BuildContext context) {
         super.build(context);
-        return ListView(
-            children: _listView
+        return RefreshIndicator(
+            child: ListView(
+                children: _listView
+            ),
+            onRefresh: () => _onRefresh()
         );
     }
 }

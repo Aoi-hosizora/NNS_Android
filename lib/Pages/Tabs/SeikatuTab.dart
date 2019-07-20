@@ -17,6 +17,7 @@ class SeikatuTab extends StatefulWidget {
 class _SeikatuTabState extends State<SeikatuTab> with AutomaticKeepAliveClientMixin {
 
     Card _more;
+    Card _load;
     List<Widget> _listView = <Widget>[];
     OnlineListDataMgr _repo;
 
@@ -26,7 +27,12 @@ class _SeikatuTabState extends State<SeikatuTab> with AutomaticKeepAliveClientMi
         CommonUtil.loge("_SeikatuTabState", "initState");
         
         _repo = OnlineListDataMgr.getInstance();
-        _more = WidgetUtil.getMore(() => _refreshData());
+        _more = WidgetUtil.getMoreCard(onTap: () {
+            _listView = WidgetUtil.addLoadingRemoveAdd(_listView, load: _load, more: _more);
+            setState(() {});
+            _refreshData();
+        });
+        _load = WidgetUtil.getLoadingCard();
         _refreshData();
     }
 
@@ -36,7 +42,13 @@ class _SeikatuTabState extends State<SeikatuTab> with AutomaticKeepAliveClientMi
         super.dispose();
     }
 
-    void _refreshData() async {
+    Future<void> _refreshData({bool isNewData: false}) async {
+        // TODO add toast(save state problem)
+        if (isNewData) {
+            _repo.seikatuKiziCnt = 0;
+            _repo.seikatuKizis.clear();
+        }
+
         for (var i = 0; i < Consts.KiziPagesForOneRefresh; i++) {
             List<KiziListItem> newkizis = await NetUtils.getSEIKATUPageData(page: ++_repo.seikatuKiziCnt);
             CommonUtil.loge("_refreshData", "_repo.seikatuKiziCnt: " + _repo.seikatuKiziCnt.toString());
@@ -45,10 +57,15 @@ class _SeikatuTabState extends State<SeikatuTab> with AutomaticKeepAliveClientMi
 
         _listView = <Widget>[];
         for (var kizi in _repo.seikatuKizis) 
+            // TODO route to Kizi Page
             _listView.add(WidgetUtil.getCardFromKiziListItem(kizi, () => CommonUtil.showToast(kizi.url)));
         _listView.add(_more);
 
         setState(() {});
+    }
+
+    Future<void> _onRefresh() async {
+        await _refreshData(isNewData: true);
     }
 
     @override
@@ -58,8 +75,11 @@ class _SeikatuTabState extends State<SeikatuTab> with AutomaticKeepAliveClientMi
     Widget build(BuildContext context) {
         super.build(context);
         // final Size size = MediaQuery.of(context).size;
-        return ListView(
-            children: _listView
+        return RefreshIndicator(
+            child: ListView(
+                children: _listView
+            ),
+            onRefresh: () => _onRefresh()
         );
     }
 }
