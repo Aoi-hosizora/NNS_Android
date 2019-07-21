@@ -14,11 +14,6 @@ class OnlineListDataMgr {
         return _instance;
     }
 
-    bool isFirstInitSeikakuTab = true;
-    bool isFirstInitShigotoTab = true;
-    bool isFirstInitGrammarTab = true;
-    bool isFirstInitCategoryTab = true;
-
     /// 中国での生活 Kizi List
     List<KiziListItem> seikatuKizis = <KiziListItem>[];
     /// 中国での生活 refresh Cnt
@@ -28,7 +23,6 @@ class OnlineListDataMgr {
         seikatuKiziCnt = 0;
         seikatuKizis.clear();
     }
-    bool isRefreshingSeikaku = false;
 
     /// 日本語教師のお仕事 Kizi list
     List<KiziListItem> shigotoKizis = <KiziListItem>[];
@@ -39,7 +33,6 @@ class OnlineListDataMgr {
         shigotoKiziCnt = 0;
         shigotoKizis.clear();
     }
-    bool isRefreshingShigoto = false;
 
     /// 文法講座 item list
     var grammarLists = HashMap<String, List<GrammarListItem>>();

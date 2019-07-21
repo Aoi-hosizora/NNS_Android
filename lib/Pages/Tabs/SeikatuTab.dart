@@ -42,20 +42,16 @@ class _SeikatuTabState extends State<SeikatuTab> with AutomaticKeepAliveClientMi
             _listView = WidgetUtil.addLoadingRemoveAdd(_listView, load: _load, more: _more);
             setState(() {}); // add refresh
             await _refreshData();
-            _refreshWidget();
         });
         _load = WidgetUtil.getLoadingCard(); 
 
-        if (_repo.isFirstInitSeikakuTab) {
-            _listView = <Widget>[
-                WidgetUtil.getLoadingTile()
-            ];
-            setState(() {});
-            _repo.initSeikakuKizis(); // TODO Ostrich code
-            if (await _refreshData())
-                _repo.isFirstInitSeikakuTab = false;      
-        }
-        _refreshWidget();
+        _listView = <Widget>[
+            LinearProgressIndicator()
+        ];
+        setState(() {});
+
+        _repo.initSeikakuKizis();
+        await _refreshData();
     }
 
     @override
@@ -69,33 +65,29 @@ class _SeikatuTabState extends State<SeikatuTab> with AutomaticKeepAliveClientMi
     /// @param `isNewData`
     ///    -  false: continue `_repo.Cnt` to get Data
     ///    - true: get Data from 1 page
-    /// 
-    /// @return `bool` isSuccess
-    Future<bool> _refreshData({bool isNewData: false}) async {
+    Future<void> _refreshData({bool isNewData: false}) async {
         if (isNewData) _repo.initSeikakuKizis();
 
         int oldCnt = _repo.seikatuKizis.length;
-        for (var i = 0; i < Consts.KiziPagesForOneRefresh; i++) {
-            List<KiziListItem> newkizis;
+        for (var i = 0; i < Consts.KiziPagesForOneRefresh; i++)
             try {
-                newkizis = await NetUtil.getSEIKATUPageData(page: ++_repo.seikatuKiziCnt);
+                List<KiziListItem> newkizis = await NetUtil.getSEIKATUPageData(page: ++_repo.seikatuKiziCnt);
+                CommonUtil.loge("_refreshData", "_repo.seikatuKiziCnt: " + _repo.seikatuKiziCnt.toString());
+                _repo.seikatuKizis.addAll(newkizis);
             }
             on HttpException {
                 CommonUtil.showToast(Strings.NetWorkError);
-                return false;
+                return;
             }
             catch (ex) {
                 CommonUtil.showToast(Strings.UnknownError);
-                return false;
+                return;
             }
             
-            CommonUtil.loge("_refreshData", "_repo.seikatuKiziCnt: " + _repo.seikatuKiziCnt.toString());
-            _repo.seikatuKizis.addAll(newkizis);
-        }
         int newCnt = _repo.seikatuKizis.length;
-
         CommonUtil.showToast(sprintf(Strings.KiziUpdateToast, [Strings.KiziTypeSeikatu, newCnt - oldCnt]));
-        return true;
+    
+        _refreshWidget();
     }
 
     /// after get data, load widget for all data

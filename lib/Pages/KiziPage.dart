@@ -39,7 +39,7 @@ class _KiziPageState extends State<KiziPage> {
     Future<void> _getData() async {
         CommonUtil.showProgress(context: context, message: Text(Strings.Loading, style: Styles.NormalTextStyle), barrierDismissible: false);
         _kiziItem = await NetUtil.getKiziContent(kizi);
-        // CommonUtil.loge("getData", "_kiziItem: " + _kiziItem.content);
+        CommonUtil.loge("getData", "_kiziItem: " + _kiziItem.content.length.toString());
         Navigator.of(context).pop();
         setState(() {});
     }

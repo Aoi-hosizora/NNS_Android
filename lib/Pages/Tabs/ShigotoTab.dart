@@ -42,28 +42,21 @@ class _ShigotoTabState extends State<ShigotoTab> with AutomaticKeepAliveClientMi
             _listView = WidgetUtil.addLoadingRemoveAdd(_listView, load: _load, more: _more);
             setState(() {}); // add refresh
             await _refreshData();
-            _refreshWidget();
         });
         _load = WidgetUtil.getLoadingCard();  
+        
+        _listView = <Widget>[
+            LinearProgressIndicator()
+        ];
+        setState(() {});
 
-        // TODO: GOMI Code(Save State Problem)
-        if (_repo.isFirstInitShigotoTab) {
-            _listView = <Widget>[
-                WidgetUtil.getLoadingTile()
-            ];
-            setState(() {});
-            if (await _refreshData()) {
-                _refreshWidget();
-                _repo.isFirstInitShigotoTab = false;
-            }
-        }
-        else
-            _refreshWidget();
+        _repo.initShigotoKizis();
+        await _refreshData();
     }
 
     @override
     void dispose() {
-        CommonUtil.loge("_ShikotoTabState", "dispose");
+        CommonUtil.loge("_ShigotoTabState", "dispose");
         super.dispose();
     }
 
@@ -72,41 +65,29 @@ class _ShigotoTabState extends State<ShigotoTab> with AutomaticKeepAliveClientMi
     /// @param `isNewData`
     ///    -  false: continue `_repo.Cnt` to get Data
     ///    - true: get Data from 1 page
-    /// 
-    /// @return `bool` is no refreshing
-    Future<bool> _refreshData({bool isNewData: false}) async {
-        if (_repo.isRefreshingShigoto)
-            return false;
-
-        _repo.isRefreshingShigoto = true;
+    Future<void> _refreshData({bool isNewData: false}) async {
         if (isNewData) _repo.initShigotoKizis();
 
         int oldCnt = _repo.shigotoKizis.length;
-        for (var i = 0; i < Consts.KiziPagesForOneRefresh; i++) {
-            List<KiziListItem> newkizis;
+        for (var i = 0; i < Consts.KiziPagesForOneRefresh; i++) 
             try {
-                newkizis = await NetUtil.getSHIGOTOPageData(page: ++_repo.shigotoKiziCnt);
+                List<KiziListItem> newkizis = await NetUtil.getSHIGOTOPageData(page: ++_repo.shigotoKiziCnt);
+                CommonUtil.loge("_refreshData", "_repo.shikotoKiziCnt: " + _repo.shigotoKiziCnt.toString());
+                _repo.shigotoKizis.addAll(newkizis);
             }
             on HttpException {
                 CommonUtil.showToast(Strings.NetWorkError);
-                _repo.isRefreshingShigoto = false;
-                return true;
+                return;
             }
             catch (ex) {
                 CommonUtil.showToast(Strings.UnknownError);
-                _repo.isRefreshingShigoto = false;
-                return true;
+                return;
             }
-            
-            CommonUtil.loge("_refreshData", "_repo.shikotoKiziCnt: " + _repo.shigotoKiziCnt.toString());
-            _repo.shigotoKizis.addAll(newkizis);
-        }
+        
         int newCnt = _repo.shigotoKizis.length;
-
         CommonUtil.showToast(sprintf(Strings.KiziUpdateToast, [Strings.ShigotoTab, newCnt - oldCnt]));
-        _repo.isRefreshingShigoto = false;
+
         _refreshWidget();
-        return true;
     }
 
     /// after get data, load widget for all data

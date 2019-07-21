@@ -41,13 +41,8 @@ class _GrammarTabState extends State<GrammarTab> with AutomaticKeepAliveClientMi
         Consts.GrammarClass.forEach((gc) { // 6
             _moreList[gc] = WidgetUtil.getMoreTile(moreText: Strings.MoreLoad, onTap: () => _onPressMore(gc));
         });
-
-        if (_repo.isFirstInitGrammarTab) {
-            if (await _refreshAllWidget(isContainData: true))
-                _repo.isFirstInitGrammarTab = false;
-        }
-        else 
-            await _refreshAllWidget(isContainData: false);
+        setState(() {});
+        await _refreshAllWidget(isContainData: true);
     }
 
     @override
@@ -58,23 +53,20 @@ class _GrammarTabState extends State<GrammarTab> with AutomaticKeepAliveClientMi
 
     /// get gmr data of gc
     /// 
-    /// @param `gc` 
-    /// 
-    /// @return `bool` isSuccess
-    Future<bool> _getData(String gc) async {
+    /// @param `gc`
+    Future<void> _getData(String gc) async {
         try {
             _repo.grammarLists[gc] = await NetUtil.getGrammarPageData(gc);
         }
         on HttpException {
             CommonUtil.showToast(Strings.NetWorkError);
-            return false;
+            return;
         }
         catch (ex) {
             CommonUtil.showToast(Strings.UnknownError);
-            return false;
+            return;
         }
         CommonUtil.loge("_getData", gc + ": " + _repo.grammarLists[gc].length.toString());
-        return true;
     }
 
     /// load widget of gc
@@ -98,15 +90,12 @@ class _GrammarTabState extends State<GrammarTab> with AutomaticKeepAliveClientMi
     /// @param `isContainData`
     ///    - false: only load all widget of all gc
     ///    - true: both get data and load widget of all gc
-    Future<bool> _refreshAllWidget({@required bool isContainData}) async {
-        bool ret = true;
+    Future<void> _refreshAllWidget({@required bool isContainData}) async {
         for (String gc in Consts.GrammarClass) {
-            if (isContainData)
-                if (!await _getData(gc))
-                    ret = false;
+            if (isContainData) 
+                await _getData(gc);
             _refreshWidget(gc);
         }
-        return ret;
     }
 
     /// handle getMoreTile `onPress` to show Bottom Sheet 

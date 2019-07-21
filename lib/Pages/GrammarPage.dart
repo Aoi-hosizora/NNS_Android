@@ -36,7 +36,7 @@ class _GrammarPageState extends State<GrammarPage> {
     Future<void> _getData() async {
         CommonUtil.showProgress(context: context, message: Text(Strings.Loading, style: Styles.NormalTextStyle), barrierDismissible: false);
         _gmrItem = await NetUtil.getGmrContent(gmr);
-        // CommonUtil.loge("getData", "_kiziItem: " + _gmrItem.content);
+        CommonUtil.loge("getData", "_kiziItem: " + _gmrItem.content.length.toString());
         Navigator.of(context).pop();
         setState(() {});
     }

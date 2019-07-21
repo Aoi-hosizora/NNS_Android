@@ -26,10 +26,6 @@ class _CategoryTabState extends State<CategoryTab> with AutomaticKeepAliveClient
 
     void _onAfterBuild() {
         _repo = OnlineListDataMgr.getInstance();
-        if (_repo.isFirstInitCategoryTab) {
-            _repo.isFirstInitCategoryTab = false;
-            //
-        }
     }
 
     @override
