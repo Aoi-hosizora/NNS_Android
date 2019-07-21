@@ -1,10 +1,12 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:http/http.dart' as http;
 import "package:html/parser.dart";
 import "package:html/dom.dart";
 import 'package:sprintf/sprintf.dart';
 
 import '../Constants/Consts.dart';
-import '../Constants/Strings.dart';
 import './CommonUtil.dart';
 import '../Models/Lists/KiziListItem.dart';
 import '../Models/Lists/GrammarListItem.dart';
@@ -40,12 +42,21 @@ class NetUtil {
             await httpClient.get(url, headers: {'User-Agent': _UA}).then((resp) {
                 if (resp.statusCode == 200)
                     ret = resp.body;
-            }, onError: (err) {
-                CommonUtil.loge("_getResponse", err.toString());
             }).whenComplete( () => httpClient.close() );
         }   
+        on SocketException catch (ex) {
+            // SocketException: OS Error: No route to host, errno = 113, address = nihongonosensei.net, port = 40593
+            // http://www.cndartlang.com/708.html ??
+            CommonUtil.loge("_getResponse", ex);
+            throw HttpException(ex.message);
+        }
+        on TimeoutException catch (ex) {
+            CommonUtil.loge("_getResponse", ex);
+            throw HttpException(ex.message);
+        }
         catch (ex) {
-            CommonUtil.loge("_getResponse", ex.toString());
+            CommonUtil.loge("_getResponse", ex);
+            throw ex;
         }
         return ret;
     }

@@ -21,7 +21,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
     /// Tab Strings(From Strings)
     List<String> _tabs = <String>[
-        Strings.SeikatuTab, Strings.ShigotoTab, Strings.GrammarTab, Strings.CategoryTab
+        // Strings.SeikatuTab, Strings.ShigotoTab, Strings.GrammarTab, Strings.CategoryTab
+        Strings.SeikatuTab, Strings.ShigotoTab, Strings.GrammarTab
     ];
 
     TabController _tabController;

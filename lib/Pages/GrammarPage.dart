@@ -29,13 +29,14 @@ class _GrammarPageState extends State<GrammarPage> {
     void initState() { 
         super.initState();
         _gmrItem = GrammarItem.fromList(gmr: gmr);
-        WidgetsBinding.instance.addPostFrameCallback((callback) => getData());
+        WidgetsBinding.instance.addPostFrameCallback((callback) => _getData());
     }
 
-    Future<void> getData() async {
+    /// get Gmr Content Data from net, show Progress Dlg
+    Future<void> _getData() async {
         CommonUtil.showProgress(context: context, message: Text(Strings.Loading, style: Styles.NormalTextStyle), barrierDismissible: false);
         _gmrItem = await NetUtil.getGmrContent(gmr);
-        CommonUtil.loge("getData", "_kiziItem: " + _gmrItem.content);
+        // CommonUtil.loge("getData", "_kiziItem: " + _gmrItem.content);
         Navigator.of(context).pop();
         setState(() {});
     }
@@ -44,7 +45,7 @@ class _GrammarPageState extends State<GrammarPage> {
     Widget build(BuildContext context) {
         return Scaffold(
             appBar: AppBar(
-                title: Text(_gmrItem.title, style: Styles.NormalTextStyle),
+                title: Text(gmr.title, style: Styles.NormalTextStyle),
                 actions: <Widget>[
                     IconButton(
                         tooltip: Strings.OpenWebSiteToolBar,

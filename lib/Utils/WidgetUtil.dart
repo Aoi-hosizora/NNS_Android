@@ -2,7 +2,6 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 
-import '../Constants/Strings.dart';
 import '../Constants/Consts.dart';
 import '../Constants/Styles.dart';
 import '../Constants/Dimens.dart';
@@ -48,15 +47,15 @@ class WidgetUtil {
             );
 
     /// More Card(ListTile)
-    static Card getMoreCard({void onTap()}) =>
+    static Card getMoreCard({@required String moreText, @required void onTap()}) =>
         Card(
-            child: getMoreTile(onTap: onTap)
+            child: getMoreTile(moreText: moreText, onTap: onTap)
         );
     
     /// More ListTile
-    static ListTile getMoreTile({void onTap()}) =>
+    static ListTile getMoreTile({@required String moreText, @required void onTap()}) =>
         ListTile(
-            title: Center(child: Text(Strings.More, style: Styles.TitleTextStyle)),
+            title: Center(child: Text(moreText, style: Styles.TitleTextStyle)),
             onTap: () => onTap(),
         );
 

@@ -17,4 +17,6 @@ class Styles {
     static const KiziTitle = const TextStyle(locale: Locale("ja", "JP"), fontSize: 22);
     static const KiziSubTitle = const TextStyle(locale: Locale("ja", "JP"), color: Colors.grey, fontSize: 14);
     static const KiziContent = const TextStyle(locale: Locale("ja", "JP"), fontSize: 16);
+
+    static const Color LoadingCircleBgColor = Colors.white;
 }

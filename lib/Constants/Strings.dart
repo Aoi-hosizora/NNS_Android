@@ -17,13 +17,16 @@ class Strings {
 
     static const String Error = "エラー";
     static const String NetWorkError = "ネットワークエラー";
-    static const String More = "もっと更新...";
+    static const String UnknownError = "未知エラー";
+
+    static const String MoreGet = "もっと更新...";
+    static const String MoreLoad = "もっと表示...";
     static const String Loading = "読み込み中...";
 
     static const String KiziPageTitle = "詳細記事";
     static const String GrammarPageTitle = "文法講座";
 
-    static const String KiziUpdateToast = "%s件の記事を更新しました";
+    static const String KiziUpdateToast = "%s: %s件の記事を更新しました";
 
     static const String GrammarClassN1 = "Ｎ１文法";
     static const String GrammarClassN1W = "Ｎ１　似ている文法の比較";

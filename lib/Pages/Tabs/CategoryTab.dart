@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../Utils/CommonUtil.dart';
 import '../../Constants/Strings.dart';
 import '../../Constants/Styles.dart';
 import '../../Models/OnlineListDataMgr.dart';
@@ -19,11 +20,22 @@ class _CategoryTabState extends State<CategoryTab> with AutomaticKeepAliveClient
     void initState() { 
         super.initState();
         WidgetsBinding.instance.addPostFrameCallback((callback) {
-            _repo = OnlineListDataMgr.getInstance();
-            if (_repo.isFirstInit_CategoryTab) {
-                //
-            }
+            _onAfterBuild();
         });
+    }
+
+    void _onAfterBuild() {
+        _repo = OnlineListDataMgr.getInstance();
+        if (_repo.isFirstInitCategoryTab) {
+            _repo.isFirstInitCategoryTab = false;
+            //
+        }
+    }
+
+    @override
+    void dispose() {
+        CommonUtil.loge("_GrammarTabState", "dispose");
+        super.dispose();
     }
 
     @override

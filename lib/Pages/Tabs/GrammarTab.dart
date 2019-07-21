@@ -1,9 +1,12 @@
+import 'dart:io';
 import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:nihongo_no_sensei/Constants/Dimens.dart';
 
 import '../../Constants/Consts.dart';
+import '../../Constants/Strings.dart';
 import '../GrammarPage.dart';
 import '../../Models/OnlineListDataMgr.dart';
 import '../../Utils/NetUtil.dart';
@@ -29,26 +32,23 @@ class _GrammarTabState extends State<GrammarTab> with AutomaticKeepAliveClientMi
         CommonUtil.loge("_GrammarTabState", "initState");
 
         WidgetsBinding.instance.addPostFrameCallback((callback) {
-            _repo = OnlineListDataMgr.getInstance();
-            if (_repo.isFirstInit_GrammarTab) {
-                Consts.GrammarClass.forEach((gc) { // 6
-                    _moreList[gc] = WidgetUtil.getMoreTile(onTap: () => _onPressMore(gc));
-                });
-                _getData();
-            }
+            _onAfterBuild();
         });
     }
 
-    void _onPressMore(String grammarClass) =>
-        CommonUtil.showBottomSheet(
-            context: context,
-            content: ListView(
-                children: WidgetUtil.getCompleteGrammarClassListFromHashMap(
-                    grammarClass,
-                    gmrslists: _gmrsList
-                )
-            )
-        );
+    void _onAfterBuild() async {
+        _repo = OnlineListDataMgr.getInstance();
+        Consts.GrammarClass.forEach((gc) { // 6
+            _moreList[gc] = WidgetUtil.getMoreTile(moreText: Strings.MoreLoad, onTap: () => _onPressMore(gc));
+        });
+
+        if (_repo.isFirstInitGrammarTab) {
+            if (await _refreshAllWidget(isContainData: true))
+                _repo.isFirstInitGrammarTab = false;
+        }
+        else 
+            await _refreshAllWidget(isContainData: false);
+    }
 
     @override
     void dispose() {
@@ -56,27 +56,72 @@ class _GrammarTabState extends State<GrammarTab> with AutomaticKeepAliveClientMi
         super.dispose();
     }
 
-    void _getData() async {
-        // TODO add toast(save state problem)
-        // Data need update
-        if (_repo.grammarLists.length != Consts.GrammarClass.length) {
-            _gmrsList = HashMap<String, List<ListTile>>();
-            for (String gc in Consts.GrammarClass) {
-                _repo.grammarLists[gc] = await NetUtil.getGrammarPageData(gc);
-                CommonUtil.loge("_getData", _repo.grammarLists[gc].length);
-                _gmrsList[gc] = <ListTile>[];
-                for (var g in _repo.grammarLists[gc])
-                    _gmrsList[gc].add(WidgetUtil.getListTileFromGrammarListItem(g, () =>
-                        Navigator.of(context).push(
-                            new MaterialPageRoute(
-                                builder: (context) => GrammarPage(gmr: g)
-                            )
-                        )
-                    ));
-                setState(() {});  
-            }
+    /// get gmr data of gc
+    /// 
+    /// @param `gc` 
+    /// 
+    /// @return `bool` isSuccess
+    Future<bool> _getData(String gc) async {
+        try {
+            _repo.grammarLists[gc] = await NetUtil.getGrammarPageData(gc);
         }
+        on HttpException {
+            CommonUtil.showToast(Strings.NetWorkError);
+            return false;
+        }
+        catch (ex) {
+            CommonUtil.showToast(Strings.UnknownError);
+            return false;
+        }
+        CommonUtil.loge("_getData", gc + ": " + _repo.grammarLists[gc].length.toString());
+        return true;
     }
+
+    /// load widget of gc
+    /// 
+    /// @param `gc`
+    void _refreshWidget(String gc) {
+        _gmrsList[gc] = <ListTile>[];
+        for (var g in _repo.grammarLists[gc])
+            _gmrsList[gc].add(WidgetUtil.getListTileFromGrammarListItem(g, () =>
+                Navigator.of(context).push(
+                    new MaterialPageRoute(
+                        builder: (context) => GrammarPage(gmr: g)
+                    )
+                )
+            ));
+        setState(() {});
+    }
+
+    /// get / load all
+    /// 
+    /// @param `isContainData`
+    ///    - false: only load all widget of all gc
+    ///    - true: both get data and load widget of all gc
+    Future<bool> _refreshAllWidget({@required bool isContainData}) async {
+        bool ret = true;
+        for (String gc in Consts.GrammarClass) {
+            if (isContainData)
+                if (!await _getData(gc))
+                    ret = false;
+            _refreshWidget(gc);
+        }
+        return ret;
+    }
+
+    /// handle getMoreTile `onPress` to show Bottom Sheet 
+    /// 
+    /// @param `gc`
+    void _onPressMore(String gc) =>
+        CommonUtil.showBottomSheet(
+            context: context,
+            content: ListView(
+                children: WidgetUtil.getCompleteGrammarClassListFromHashMap(
+                    gc,
+                    gmrslists: _gmrsList
+                )
+            )
+        );
 
     @override
     bool get wantKeepAlive => true;

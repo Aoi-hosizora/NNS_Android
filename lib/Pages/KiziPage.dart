@@ -31,14 +31,15 @@ class _KiziPageState extends State<KiziPage> {
         super.initState();
         _kiziItem = KiziItem.fromList(kizi: kizi);
         WidgetsBinding.instance.addPostFrameCallback((callback) {
-            getData();
+            _getData();
         });
     }
 
-    Future<void> getData() async {
+    /// get Kizi Content data from net
+    Future<void> _getData() async {
         CommonUtil.showProgress(context: context, message: Text(Strings.Loading, style: Styles.NormalTextStyle), barrierDismissible: false);
         _kiziItem = await NetUtil.getKiziContent(kizi);
-        CommonUtil.loge("getData", "_kiziItem: " + _kiziItem.content);
+        // CommonUtil.loge("getData", "_kiziItem: " + _kiziItem.content);
         Navigator.of(context).pop();
         setState(() {});
     }

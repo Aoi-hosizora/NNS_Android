@@ -14,20 +14,32 @@ class OnlineListDataMgr {
         return _instance;
     }
 
-    bool isFirstInit_SeikakuTab = true;
-    bool isFirstInit_ShigotoTab = true;
-    bool isFirstInit_GrammarTab = true;
-    bool isFirstInit_CategoryTab = true;
+    bool isFirstInitSeikakuTab = true;
+    bool isFirstInitShigotoTab = true;
+    bool isFirstInitGrammarTab = true;
+    bool isFirstInitCategoryTab = true;
 
     /// 中国での生活 Kizi List
     List<KiziListItem> seikatuKizis = <KiziListItem>[];
     /// 中国での生活 refresh Cnt
     int seikatuKiziCnt = 0;
+    /// 中国での生活 clear
+    void initSeikakuKizis() {
+        seikatuKiziCnt = 0;
+        seikatuKizis.clear();
+    }
+    bool isRefreshingSeikaku = false;
 
     /// 日本語教師のお仕事 Kizi list
-    List<KiziListItem> shikotoKizis = <KiziListItem>[];
+    List<KiziListItem> shigotoKizis = <KiziListItem>[];
     /// 日本語教師のお仕事 refresh Cnt
-    int shikotoKiziCnt = 0;
+    int shigotoKiziCnt = 0;
+    /// 日本語教師のお仕事 clear
+    void initShigotoKizis() {
+        shigotoKiziCnt = 0;
+        shigotoKizis.clear();
+    }
+    bool isRefreshingShigoto = false;
 
     /// 文法講座 item list
     var grammarLists = HashMap<String, List<GrammarListItem>>();
